@@ -1,0 +1,1496 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Herda, an independent Linux operating system</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;display=swap">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#131618}
+sc-for,sc-if{display:contents}
+.phone{scroll-behavior:smooth;scrollbar-width:none}
+.hw{--bg:#131618;--s1:#171A1D;--s2:#202327;--ov:#2D3135;--fg:#F2F2EF;--t2:#CACFD0;--t3:#BEC3C5;--t4:#A1A5A7;--acc:#FFBC50;--acch:#FFC96F;--accbg:#33291C;--ink:#1B1408;--bd:#3D4044;--bds:#888D8F;--ok:#7CD595;--hl:rgba(255,255,255,.065);--hl2:rgba(255,255,255,.1);--ease:cubic-bezier(.2,.8,.2,1);container:hw/inline-size;position:relative;display:flex;flex-direction:column;min-height:100vh;background:var(--bg);color:var(--fg);font-family:"Schibsted Grotesk","Noto Sans","Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;overflow-x:clip}
+.hw *,.hw *::before,.hw *::after{box-sizing:border-box}
+:where(.hw) a{color:inherit;text-decoration:none}
+:where(.hw) button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:inherit}
+:where(.hw) h1,:where(.hw) h2,:where(.hw) h3,:where(.hw) p,:where(.hw) figure,:where(.hw) ol,:where(.hw) ul{margin:0;padding:0}
+:where(.hw) ol,:where(.hw) ul{list-style:none}
+.hw :focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+.hw ::selection{background:rgba(255,188,80,.32)}
+.hw main{flex:1}
+.mono{font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:400}
+.ic{display:block;width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.ic-xs{width:14px;height:14px}.ic-s{width:16px;height:16px}.ic-l{width:24px;height:24px}
+.muted{color:var(--t4)}.amb{color:var(--acc)}
+.wrap{width:100%;max-width:1264px;margin:0 auto;padding:0 32px}
+.tile{display:grid;place-items:center;flex:none;width:28px;height:28px;border-radius:8px}
+.panel{background:var(--s1);border-radius:24px;box-shadow:inset 0 0 0 1px var(--hl),inset 0 1px 0 rgba(255,255,255,.035)}
+.glass{background:rgba(29,32,35,.62);-webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.07),0 28px 60px -18px rgba(0,0,0,.75)}
+.badge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;background:rgba(255,188,80,.15);color:var(--acc)}
+.badge.ok{background:rgba(124,213,149,.13);color:var(--ok)}
+.badge.ok::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge.mu{background:rgba(255,255,255,.07);color:var(--t3)}
+.badge .ic{width:12px;height:12px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;font-size:15px;font-weight:600;letter-spacing:-.005em;white-space:nowrap;transition:background-color .2s var(--ease),box-shadow .2s var(--ease),color .2s,transform .15s}
+.btn:active{transform:translateY(1px)}
+.btn .ic{width:17px;height:17px}
+.btn-p{background:var(--acc);color:var(--ink)}
+.btn-p:hover{background:var(--acch)}
+.btn-g{background:rgba(255,255,255,.04);color:var(--fg);box-shadow:inset 0 0 0 1px var(--bd)}
+.btn-g:hover{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px #5a5e62}
+.btn-lg{height:52px;padding:0 26px;font-size:16px}
+.btn-sm{height:40px;padding:0 16px;font-size:14px}
+.btn-xs{height:34px;padding:0 14px;font-size:13.5px}
+.btn-block{width:100%}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:40;height:64px;background:rgba(19,22,24,.72);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);box-shadow:inset 0 -1px 0 var(--hl)}
+.nav-in{height:100%;display:flex;align-items:center;gap:28px}
+.brand{display:inline-flex;align-items:center;gap:10px;height:44px;font-size:18px;font-weight:600;letter-spacing:-.015em}
+.mark{width:22px;height:22px;fill:none;stroke:var(--acc);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
+.hmark{display:block;flex:none;width:18px;height:24px;background:var(--acc);-webkit-mask:url(./assets/8a2498ed82662cd6b050a83649735d0c.png) center/contain no-repeat;mask:url(./assets/8a2498ed82662cd6b050a83649735d0c.png) center/contain no-repeat}
+.smk .hmark{width:15px;height:20px}
+.st-b .hmark{width:10px;height:14px}
+.links{display:flex;gap:2px}
+.links a{display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:999px;font-size:14.5px;color:var(--t3);transition:color .2s,background-color .2s}
+.links a:hover{color:var(--fg);background:rgba(255,255,255,.05)}
+.nav-r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.search{display:flex;align-items:center;gap:10px;width:228px;height:40px;padding:0 8px 0 14px;border-radius:999px;background:var(--s2);box-shadow:inset 0 0 0 1px var(--hl);font-size:14px;color:var(--t4);transition:box-shadow .2s,color .2s}
+.search:hover{color:var(--t3);box-shadow:inset 0 0 0 1px var(--bd)}
+.kbd{margin-left:auto;display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;box-shadow:inset 0 0 0 1px var(--bd);font-size:12px;color:var(--t4)}
+.menu-b{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--s2);box-shadow:inset 0 0 0 1px var(--hl2)}
+.sheet{position:absolute;top:calc(100% + 8px);left:12px;right:12px;padding:8px;border-radius:22px;background:rgba(27,30,33,.94);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:inset 0 0 0 1px var(--hl2),0 30px 60px -10px rgba(0,0,0,.7);animation:sheet .35s var(--ease) both}
+@keyframes sheet{from{opacity:0;transform:translateY(-6px) scale(.985)}}
+.srow{display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border-radius:14px;font-size:15.5px;font-weight:500;transition:background-color .2s}
+.srow:hover{background:rgba(255,255,255,.05)}
+.srow-l{flex:1}
+.sheet-cta{width:100%;margin-top:8px}
+
+/* wallpaper: folded graphite with an amber seam of light */
+.wp{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:radial-gradient(120% 90% at 42% -10%,#26292d 0%,#181a1d 46%,#111315 100%)}
+.wp i{position:absolute;inset:0;display:block}
+.wp .f1{clip-path:polygon(34% 0,64% 0,100% 52%,100% 80%);background:linear-gradient(128deg,#2c2f33 0%,#1d2023 42%,#131517 100%)}
+.wp .f2{clip-path:polygon(64% 0,100% 0,100% 52%);background:linear-gradient(205deg,#0c0e0f 0%,#16181b 65%,#1f2225 100%)}
+.wp .f3{clip-path:polygon(0 56%,31% 73%,53% 100%,0 100%);background:linear-gradient(168deg,#2d3033 0%,#1b1d20 45%,#101214 100%)}
+.wp .f4{clip-path:polygon(57% 100%,100% 63%,100% 100%);background:linear-gradient(300deg,#222528 0%,#131517 80%)}
+.wp .e1{clip-path:polygon(63.88% 0,64.12% 0,100% 51.6%,100% 52.4%);background:linear-gradient(90deg,rgba(255,188,80,0) 64%,rgba(255,216,160,.95) 70%,rgba(255,188,80,.5) 86%,rgba(255,188,80,0) 100%)}
+.wp .glow{filter:blur(14px);opacity:.55}
+.wp .e1g{clip-path:polygon(63.2% 0,64.8% 0,100% 50%,100% 54%);background:linear-gradient(90deg,rgba(255,188,80,0) 63%,rgba(255,188,80,.7) 70%,rgba(255,188,80,0) 92%)}
+.wp .e2{clip-path:polygon(31% 73%,31.25% 73%,53.25% 100%,53% 100%);background:linear-gradient(90deg,rgba(255,188,80,0) 31%,rgba(255,206,140,.8) 38%,rgba(255,188,80,.15) 50%,rgba(255,188,80,0) 53%)}
+.wp .e3{clip-path:polygon(0 55.8%,31% 72.8%,31% 73.3%,0 56.3%);background:linear-gradient(90deg,rgba(242,242,239,0) 0%,rgba(242,242,239,.22) 18%,rgba(242,242,239,.06) 31%)}
+.wp .e4{clip-path:polygon(57% 100%,100% 62.8%,100% 63.3%,57.5% 100%);background:linear-gradient(90deg,rgba(255,188,80,0) 57%,rgba(255,188,80,.42) 82%,rgba(255,188,80,.12) 100%)}
+.wp .e5{clip-path:polygon(34% 0,34.2% 0,100% 80.3%,100% 80.8%);background:linear-gradient(90deg,rgba(242,242,239,.09) 34%,rgba(242,242,239,.03) 100%)}
+.wp .fade{background:linear-gradient(180deg,rgba(19,22,24,0) 0%,rgba(19,22,24,0) 46%,#131618 92%),linear-gradient(90deg,rgba(19,22,24,.55) 0%,rgba(19,22,24,0) 58%)}
+
+/* hero */
+.hero{position:relative;margin-top:-64px;padding-top:176px}
+.hero>.wp{bottom:auto;height:1120px}
+.hero>.wrap{position:relative}
+.h1{max-width:11.5em;font-size:clamp(44px,6.9cqi,100px);line-height:.98;letter-spacing:-.04em;font-weight:600}
+.h1 .rv{display:inline-block}
+.lede{margin-top:28px;max-width:33em;font-size:19px;line-height:1.55;color:var(--t3);text-wrap:pretty}
+.cta{display:flex;gap:12px;margin-top:40px}
+.meta{margin-top:18px;font-size:13.5px;color:var(--t4)}
+.hfig{position:relative;height:640px;margin-top:72px}
+.hwin{position:absolute;right:0;top:0;width:min(1000px,84%)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+@keyframes ignite{from{opacity:0}}
+.rv{animation:rise .95s var(--ease) both}
+.d1{animation-delay:.05s}.d2{animation-delay:.16s}.d3{animation-delay:.28s}.d4{animation-delay:.38s}.d5{animation-delay:.52s}
+.hero .wp .e1,.hero .wp .glow,.hero .wp .e2,.hero .wp .e4{animation:ignite 1.8s .45s ease both}
+
+/* settings window (hero) */
+.win{overflow:hidden;border-radius:24px;background:rgba(23,26,29,.88);-webkit-backdrop-filter:blur(24px) saturate(130%);backdrop-filter:blur(24px) saturate(130%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),inset 0 1px 0 rgba(255,255,255,.06),0 50px 90px -30px rgba(0,0,0,.8)}
+.win-top{display:grid;grid-template-columns:1fr minmax(0,420px) 1fr;align-items:center;gap:12px;padding:12px 14px}
+.win-title{padding-left:6px;font-size:15px;font-weight:600}
+.w-search{display:flex;align-items:center;gap:10px;height:36px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.055);font-size:13.5px;color:var(--t4)}
+.esc{justify-self:end;display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:30px;padding:0 10px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--bd);font-size:12px;color:var(--t3)}
+.win-body{padding:14px 26px 26px}
+.w-h1{font-size:28px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.w-sub{margin-top:4px;font-size:13.5px;color:var(--t3)}
+.machine{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:24px;margin-top:22px;padding:14px;border-radius:16px;background:rgba(255,255,255,.035);box-shadow:inset 0 0 0 1px var(--hl)}
+.m-thumb{position:relative;width:120px;height:76px;overflow:hidden;border-radius:10px;box-shadow:inset 0 0 0 1px var(--hl)}
+.m-mini{position:absolute;left:20%;top:24%;width:60%;height:56%;padding:7px;border-radius:6px;background:rgba(23,26,29,.92);box-shadow:inset 0 0 0 1px var(--hl2);display:flex;flex-direction:column;gap:4px}
+.m-mini i{display:block;height:3px;border-radius:2px;background:rgba(242,242,239,.22)}
+.m-mini i.a{width:28%;background:var(--acc)}
+.m-host{font-size:22px;font-weight:600;letter-spacing:-.015em;line-height:1.2}
+.m-spec{margin-top:3px;font-size:13px;color:var(--t4)}
+.m-disk{min-width:180px;padding-left:24px;box-shadow:-1px 0 0 var(--hl2);font-size:13px;color:var(--t4)}
+.m-disk b{font-size:14px;font-weight:600;color:var(--fg);margin-right:6px}
+.bar{height:4px;margin-top:8px;overflow:hidden;border-radius:2px;background:rgba(255,255,255,.12)}
+.bar i{display:block;height:100%;border-radius:2px;background:#E9EAE6}
+.w-btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:10px;background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--bd);font-size:13.5px}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+.col-h{margin:0 0 8px 4px;font-size:13.5px;font-weight:600;color:var(--t2)}
+.list{padding:4px;border-radius:14px;background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--hl)}
+.row{display:flex;align-items:center;gap:12px;height:40px;padding:0 10px;font-size:13.5px}
+.row+.row{box-shadow:0 -1px 0 var(--hl)}
+.row .tile{width:26px;height:26px}
+.row .lab{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.row .val{font-size:12.5px;color:var(--t4);white-space:nowrap}
+.row .ch{color:var(--t4)}
+
+/* control centre (hero) */
+.cc{position:absolute;left:0;top:196px;z-index:2;width:300px;padding:14px;border-radius:24px;background:rgba(27,30,33,.8);-webkit-backdrop-filter:blur(28px) saturate(140%);backdrop-filter:blur(28px) saturate(140%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),inset 0 1px 0 rgba(255,255,255,.07),0 30px 60px -12px rgba(0,0,0,.75);animation:rise 1s .8s var(--ease) both}
+.cc-top{display:flex;align-items:center;gap:8px;margin:2px 2px 12px}
+.cc-top .grab{display:block;width:96px;height:8px;border-radius:4px;background:rgba(255,255,255,.14);margin-right:auto}
+.cc-top .dt{display:block;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08)}
+.cc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qt{display:flex;align-items:center;gap:10px;height:54px;padding:0 0 0 12px;border-radius:14px;background:rgba(255,255,255,.07);font-size:13px;line-height:1.25}
+.qt-t{flex:1;min-width:0}
+.qt b{display:block;font-weight:600}
+.qt small{display:block;font-size:11.5px;color:var(--t4)}
+.qt.on{background:var(--acc);color:var(--ink)}
+.qt.on small{color:rgba(27,20,8,.72)}
+.qt-x{align-self:stretch;display:flex;align-items:center;padding:0 8px;box-shadow:-1px 0 0 rgba(0,0,0,.14)}
+.qt:not(.on) .qt-x{box-shadow:-1px 0 0 var(--hl2)}
+.sls{display:grid;gap:8px;margin-top:8px;padding:8px;border-radius:14px;background:rgba(255,255,255,.05)}
+.sl{position:relative;height:32px;overflow:hidden;border-radius:999px;background:rgba(0,0,0,.3)}
+.sl>i{position:absolute;left:0;top:0;bottom:0;display:block;border-radius:999px;background:#ECEDE9}
+.sl>span{position:relative;display:flex;align-items:center;gap:8px;height:100%;padding:0 12px;font-size:12.5px;font-weight:600;color:#1B1D1F}
+.cc-row{display:flex;align-items:center;gap:10px;height:48px;margin-top:8px;padding:0 12px;border-radius:14px;background:rgba(255,255,255,.07);font-size:13px;font-weight:600}
+.cc-row .v{margin-left:auto;font-size:12px;font-weight:400;color:var(--t4)}
+
+/* sections */
+.sec{padding-top:152px}
+.sh{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;align-items:end;margin-bottom:56px}
+.sh .h2{grid-column:1/span 7}
+.sh .sp{grid-column:8/span 5}
+.sh-l{max-width:680px;margin-bottom:48px}
+.sh-l .sp{margin-top:20px}
+.h2{font-size:clamp(34px,3.6cqi,52px);line-height:1.03;letter-spacing:-.032em;font-weight:600;text-wrap:balance}
+.sp{max-width:36em;font-size:17.5px;line-height:1.6;color:var(--t3);text-wrap:pretty}
+
+/* profiles */
+.pf-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start}
+.pf-side{grid-column:1/span 4;display:flex;flex-direction:column;gap:32px}
+.pf-main{grid-column:5/span 8;display:flex;flex-direction:column;gap:16px}
+.pf-list{display:flex;flex-direction:column;gap:8px}
+.pf{display:flex;align-items:center;gap:16px;width:100%;padding:14px 16px;border-radius:18px;background:var(--s1);box-shadow:inset 0 0 0 1px var(--hl);transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
+.pf:hover{background:#1c1f22;box-shadow:inset 0 0 0 1px #34373b}
+.pf.is-sel{background:var(--accbg);box-shadow:inset 0 0 0 1.5px var(--acc),0 0 0 4px rgba(255,188,80,.07)}
+.pf-g{width:56px;height:40px;flex:none;fill:none;stroke:var(--t4);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;transition:stroke .25s}
+.pf.is-sel .pf-g{stroke:var(--acc)}
+.pf-t{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.pf-n{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600}
+.pf-d{font-size:13.5px;line-height:1.4;color:var(--t4)}
+.pf.is-sel .pf-d{color:var(--t3)}
+.steps{display:flex;flex-direction:column;padding-left:2px}
+.step{position:relative;display:grid;grid-template-columns:32px 1fr;column-gap:14px;padding-bottom:18px}
+.step:last-child{padding-bottom:0}
+.step:not(:last-child)::before{content:"";position:absolute;left:15.5px;top:36px;bottom:4px;width:1px;background:var(--bd)}
+.st-n{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--s2);box-shadow:inset 0 0 0 1px var(--bd);font-size:13px;font-weight:600;color:var(--t4);transition:background-color .3s,color .3s,box-shadow .3s}
+.step.is-now .st-n{background:var(--acc);box-shadow:none;color:var(--ink)}
+.step.is-done .st-n{background:var(--accbg);box-shadow:inset 0 0 0 1px rgba(255,188,80,.45);color:var(--acc)}
+.st-b{padding-top:5px}
+.st-b b{display:block;font-size:15px;font-weight:600}
+.st-b span{display:block;margin-top:1px;font-size:13.5px;color:var(--t4)}
+
+/* profile stage */
+.stage{position:relative;height:480px;overflow:hidden;border-radius:24px;isolation:isolate;box-shadow:inset 0 0 0 1px var(--hl2),0 40px 80px -40px rgba(0,0,0,.8)}
+.lay{position:absolute;inset:0;animation:lay .6s var(--ease) both}
+@keyframes lay{from{opacity:0;transform:scale(1.015)}}
+.lay-k{position:absolute;left:50%;top:50%;width:784px;height:480px;transform:translate(-50%,-50%)}
+.sbar{position:absolute;top:14px;left:18px;right:18px;display:flex;align-items:center;justify-content:space-between}
+.smk{display:flex;align-items:center;gap:10px}
+.smk svg{width:15px;height:15px;fill:none;stroke:var(--acc);stroke-width:3;stroke-linecap:round}
+.ws{display:flex;align-items:center;gap:4px}
+.ws i{display:block;width:4px;height:4px;border-radius:2px;background:rgba(242,242,239,.35)}
+.ws i.on{width:16px;background:var(--acc)}
+.chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:9px;background:rgba(32,35,39,.82);box-shadow:inset 0 0 0 1px var(--hl);font-size:12.5px}
+.sk{display:block;height:8px;border-radius:4px;background:rgba(242,242,239,.13)}
+.sk.hi{background:rgba(242,242,239,.42)}
+.sk.am{background:var(--acc)}
+.sk.gr{background:var(--ok);opacity:.85}
+.smk .sm-mark{width:19px;height:19px;fill:none;stroke:var(--acc);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sm-ws{gap:7px}
+.sm-ws i{width:5px;height:5px;border-radius:3px;background:rgba(242,242,239,.8)}
+.sm-ws i.on{width:17px;background:var(--acc)}
+.sm-chip{gap:8px;padding:0 12px;background:rgba(30,32,35,.92)}
+.sm-chip .ic{width:13px;height:13px;color:var(--t2)}
+.sm-chip span+span{margin-left:4px}
+.sm-l{position:absolute;left:50%;top:46px;display:flex;flex-direction:column;width:410px;padding:18px 18px 8px;border-radius:17px;background:rgba(31,33,36,.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.09),0 34px 70px -24px rgba(0,0,0,.85);transform:translateX(-50%) scale(.8);transform-origin:50% 0}
+.sm-l::before{content:"";position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,rgba(255,188,80,0),rgba(255,204,140,.85) 50%,rgba(255,188,80,0))}
+.sm-h{display:flex;align-items:center;height:26px}
+.sm-h b{font-size:16px;font-weight:500;letter-spacing:-.01em}
+.sm-hr{display:flex;align-items:center;gap:18px;margin-left:auto;font-size:12.5px;color:var(--t2)}
+.sm-hr .ic{width:16px;height:16px}
+.sm-bt{display:flex;align-items:center;gap:7px}
+.sm-s{display:flex;align-items:center;gap:10px;height:32px;margin-top:14px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.055);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);font-size:11.5px;color:var(--t3)}
+.sm-s .ic{width:15px;height:15px}
+.sm-sec{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-size:12px}
+.sm-sec b{font-weight:500}
+.sm-sec span{display:flex;align-items:center;gap:5px;color:var(--t3)}
+.sm-sec .ic{width:12px;height:12px}
+.sm-g{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px 6px;margin-top:8px}
+.sm-a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-width:0;height:64px;padding:0 4px;border-radius:9px;font-size:10.5px;color:var(--t2)}
+.sm-a span{max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.sm-a .ic{width:26px;height:26px;stroke-width:1.6}
+.sm-a.on{background:var(--accbg);box-shadow:inset 0 0 0 1px rgba(255,188,80,.1)}
+.sm-c{display:flex;flex-direction:column;margin-top:6px}
+.sm-r{display:flex;align-items:center;gap:10px;height:38px;padding:0 6px}
+.sm-r .tile{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.06);color:var(--t2)}
+.sm-r .ic{width:14px;height:14px}
+.sm-rt{flex:1;min-width:0;line-height:1.3}
+.sm-rt b{display:block;overflow:hidden;font-size:11px;font-weight:400;white-space:nowrap;text-overflow:ellipsis}
+.sm-rt small{display:block;font-size:9.5px;color:var(--t4)}
+.sm-r>.ic{color:var(--t3)}
+.sm-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:8px -10px 0;padding-top:8px;box-shadow:0 -1px 0 var(--hl2)}
+.sm-tabs span{display:flex;align-items:center;justify-content:center;gap:8px;height:36px;border-radius:10px;font-size:12px;color:var(--t2)}
+.sm-tabs .ic{width:15px;height:15px}
+.sm-tabs span.on{background:var(--accbg);color:var(--acc);font-weight:500}
+.wb{position:absolute;inset:0;overflow:hidden;pointer-events:none;background:radial-gradient(60% 50% at 80% 30%,rgba(40,36,30,.35),rgba(40,36,30,0) 70%),linear-gradient(180deg,#0a0b0c 0%,#121315 48%,#090a0b 100%)}
+.wb i{position:absolute;inset:0;display:block}
+.wb .b1{clip-path:polygon(0 59.5%,100% 32.6%,100% 54.4%,0 77.7%);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,0) 60%),linear-gradient(90deg,#3d3e42 0%,#2f3033 34%,#1c1d20 68%,#141517 100%)}
+.wb .b2{clip-path:polygon(0 77.7%,100% 54.4%,100% 100%,0 100%);background:linear-gradient(180deg,rgba(9,10,11,0) 20%,rgba(8,9,10,.92) 100%),linear-gradient(90deg,#101113 0%,#1b1c1f 55%,#2b2c2f 100%)}
+.wb .glow{filter:blur(9px);opacity:.6}
+.wb .l1g{clip-path:polygon(0 58.8%,100% 31.8%,100% 33.4%,0 60.4%);background:linear-gradient(90deg,rgba(255,188,80,0) 15%,rgba(255,188,80,.75) 58%,rgba(255,188,80,.2) 100%)}
+.wb .l1{clip-path:polygon(0 59.3%,100% 32.4%,100% 32.8%,0 59.7%);background:linear-gradient(90deg,rgba(242,236,226,.18) 0%,rgba(255,204,140,.45) 25%,rgba(255,224,178,.95) 56%,rgba(255,206,146,.7) 80%,rgba(255,188,80,.35) 100%)}
+.wb .l2{clip-path:polygon(0 77.5%,100% 54.2%,100% 54.6%,0 77.9%);background:linear-gradient(90deg,rgba(255,188,80,.5) 0%,rgba(255,204,140,.75) 24%,rgba(255,188,80,.22) 55%,rgba(255,188,80,0) 74%)}
+.as-t{position:absolute;inset:0;background:radial-gradient(70% 60% at 68% 30%,rgba(122,128,214,.2),rgba(122,128,214,0) 70%),linear-gradient(180deg,rgba(38,34,70,.35),rgba(19,22,24,.15))}
+.as-r{position:absolute;left:22px;top:50%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:28px;transform:translateY(-50%)}
+.as-r .b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;color:var(--t3)}
+.as-r .b.on{background:rgba(255,188,80,.16);color:var(--acc)}
+.as-c{position:absolute;left:228px;top:112px;width:380px;padding:20px;border-radius:22px;display:flex;flex-direction:column;gap:12px}
+.as-h{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.as-h .tile{width:44px;height:44px;border-radius:13px;background:rgba(255,255,255,.08);color:var(--t2)}
+.as-h div{display:flex;flex-direction:column;gap:7px;flex:1}
+.as-m{position:absolute;right:44px;bottom:44px;width:200px;padding:16px;border-radius:18px;display:flex;flex-direction:column;gap:6px}
+.as-m b{font-size:30px;font-weight:500;letter-spacing:-.03em;line-height:1}
+.as-m span{font-size:12px;color:var(--t3)}
+.as-top{position:absolute;top:14px;right:18px}
+.st-bg{position:absolute;inset:0;background:#15181A}
+.st-b{position:absolute;left:0;right:0;top:0;height:32px;display:flex;align-items:center;gap:14px;padding:0 14px;background:#1A1D20;box-shadow:inset 0 -1px 0 var(--hl);font-size:12px;color:var(--t3)}
+.st-b .push{margin-left:auto}
+.st-w{position:absolute;top:46px;bottom:14px;display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:12px;background:#1C1F22;box-shadow:inset 0 0 0 1px var(--hl)}
+.st-w1{left:14px;width:452px}
+.st-w2{left:478px;width:230px}
+.st-e{position:absolute;right:14px;top:46px;bottom:14px;width:46px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0;border-radius:12px;background:#1C1F22;box-shadow:inset 0 0 0 1px var(--hl);color:var(--t4)}
+.st-e .b{display:grid;place-items:center;width:32px;height:32px;border-radius:9px}
+.st-e .b.on{background:rgba(255,188,80,.14);color:var(--acc)}
+.dk-w{position:absolute;left:50%;top:44%;width:420px;overflow:hidden;border-radius:14px;transform:translate(-50%,-50%)}
+.dk-tb{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;box-shadow:inset 0 -1px 0 var(--hl)}
+.dk-tb i{display:block;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.16)}
+.dk-tb span{margin-left:10px;font-size:12px;color:var(--t3)}
+.dk-bd{display:flex;flex-direction:column;gap:10px;height:190px;padding:20px}
+.tb{position:absolute;left:10px;right:10px;bottom:10px;height:50px;display:flex;align-items:center;gap:10px;padding:0 8px;border-radius:13px}
+.tb-ws{display:flex;align-items:center;gap:8px;height:36px;padding:0 8px 0 11px;border-radius:9px;background:rgba(255,255,255,.035);box-shadow:inset 0 0 0 1px var(--hl);font-size:11.5px;line-height:1.2}
+.tb-ws b{display:block;font-weight:500}
+.tb-ws small{display:block;font-size:10px;color:var(--t4)}
+.tb-ws .ic{margin-left:18px;color:var(--t4)}
+.tb-dot{display:block;width:6px;height:6px;border-radius:50%;background:var(--acc)}
+.tb-sep{display:block;width:1px;height:24px;background:var(--hl2)}
+.tb-apps{position:absolute;left:50%;top:50%;display:flex;gap:8px;transform:translate(-50%,-50%)}
+.tb-a{position:relative;display:grid;place-items:center;width:32px;height:32px;border-radius:9px;color:var(--t2)}
+.tb-a.amb{color:var(--acc)}
+.tb-a.tl{color:#FBA773}
+.tb-a.tl svg{padding:3px;border-radius:6px;background:rgba(251,167,115,.16);box-shadow:inset 0 0 0 1px rgba(251,167,115,.35);width:22px;height:22px}
+.tb-run{position:absolute;left:50%;bottom:-4px;display:block;width:8px;height:2px;margin-left:-4px;border-radius:1px;background:var(--t4)}
+.tb-tray{margin-left:auto;display:flex;align-items:center;gap:12px;color:var(--t2)}
+.tb-tray .ic{width:15px;height:15px}
+.tb-clk{display:flex;flex-direction:column;align-items:flex-end;margin-left:8px;padding-right:6px;font-size:11.5px;line-height:1.25}
+.tb-clk b{font-weight:500}
+.tb-clk small{font-size:10px;color:var(--t4)}
+
+/* Smia layers, the source-to-session flow, and theme preview fill */
+.lyrs{display:flex;flex-direction:column;gap:6px}
+.lyr{display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px;background:rgba(123,217,189,.05);box-shadow:inset 0 0 0 1px rgba(123,217,189,.16);font-size:12px;color:var(--t2)}
+.lyr:nth-child(2){margin-left:10px}
+.lyr:nth-child(3){margin-left:20px}
+.lyr:nth-child(4){margin-left:30px;background:var(--cb);color:var(--c)}
+.chips{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.chip2{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:rgba(255,255,255,.06);font-size:12px;font-weight:500;color:var(--t2)}
+.t-herda{--c:#FFBC50;--cb:rgba(255,188,80,.14)}
+.t-out{--c:#CACFD0;--cb:rgba(202,207,208,.1)}
+.flow{margin-top:20px;padding:32px}
+.flow-h{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px}
+.flow-h h3{font-size:22px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.flow-h p{max-width:34em;font-size:15px;line-height:1.55;color:var(--t3)}
+.flow-s{position:relative;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px}
+.flow-s::before{content:"";position:absolute;left:6px;right:6px;top:6px;height:1px;background:linear-gradient(90deg,#7BD9BD 0%,#6ED9E4 30%,#CACFD0 50%,#7BD9BD 72%,#FFBC50 100%);opacity:.5}
+.fs{position:relative;display:flex;flex-direction:column;gap:4px;padding-top:30px}
+.fs::before{content:"";position:absolute;left:0;top:0;width:13px;height:13px;border-radius:50%;background:var(--s1);box-shadow:inset 0 0 0 2px var(--c),0 0 0 5px var(--s1)}
+.fs-k{font-size:12.5px;font-weight:600;color:var(--c)}
+.fs b{margin-top:2px;font-size:16px;font-weight:600;letter-spacing:-.005em}
+.fs-d{font-size:13.5px;line-height:1.5;color:var(--t4)}
+.fs-code{font-size:12px;line-height:1.65;color:var(--t2)}
+.flow-g{--c:var(--acc);display:flex;align-items:center;gap:16px;margin-top:32px;padding-top:24px;box-shadow:0 -1px 0 var(--hl)}
+.flow-g .tile{width:40px;height:40px;border-radius:12px;background:rgba(242,242,239,.07);color:var(--t2)}
+.flow-g p{flex:1;max-width:60em;font-size:14.5px;line-height:1.55;color:var(--t3)}
+.flow-g p b{font-weight:600;color:var(--fg)}
+.flow-g .tool-l{flex:none;margin-top:0}
+.th-main .th-pv{display:flex;flex-direction:column}
+.th-pv .th-desk{flex:1;display:flex;flex-direction:column}
+.th-desk .th-apps{flex:1}
+.th-apps .app{display:flex;flex-direction:column}
+.th-pv .fm{flex:1;height:auto;min-height:168px}
+@container hw (max-width:980px){
+.flow-h{display:block}
+.flow-h p{margin-top:10px}
+.flow-s{grid-template-columns:1fr;gap:22px}
+.flow-s::before{left:6px;right:auto;top:6px;bottom:6px;width:1px;height:auto;background:linear-gradient(180deg,#7BD9BD 0%,#6ED9E4 30%,#CACFD0 50%,#7BD9BD 72%,#FFBC50 100%)}
+.fs{padding:0 0 0 32px}
+.fs::before{top:3px}
+.flow-g{flex-wrap:wrap}
+}
+@container hw (max-width:640px){
+.flow{padding:22px}
+.flow-g .tool-l{margin-left:56px}
+.tv-r{flex-wrap:wrap}
+}
+
+/* profile summary */
+.sum{display:flex;align-items:center;gap:28px;min-height:96px;padding:20px 22px;border-radius:20px}
+.sum-a{flex:1 1 200px;min-width:0}
+.sum-a b{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.sum-a b .ic{color:var(--ok)}
+.sum-a>span{display:block;margin-top:2px;font-size:13.5px;line-height:1.45;color:var(--t4)}
+.sum-m{display:flex;gap:28px;padding:0 28px;box-shadow:-1px 0 0 var(--hl2),1px 0 0 var(--hl2)}
+.kv small{display:block;font-size:12.5px;color:var(--t4)}
+.kv b{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:14px;font-weight:500;white-space:nowrap}
+.kv .mu{color:var(--t4);font-weight:400}
+.sum-b{display:flex;flex:none;gap:10px}
+
+/* system */
+.sys-top{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:end;margin-bottom:48px}
+.sys-top .sh-l{grid-column:1/span 6;margin-bottom:0}
+.facts{grid-column:8/span 5;padding:6px}
+.fact{display:grid;grid-template-columns:36px 1fr;gap:14px;padding:14px}
+.fact+.fact{box-shadow:0 -1px 0 var(--hl)}
+.fact .tile{width:36px;height:36px;border-radius:10px;background:var(--s2);color:var(--t2)}
+.fact b{display:block;font-size:15px;font-weight:600}
+.fact span{display:block;margin-top:2px;font-size:13.5px;line-height:1.45;color:var(--t4)}
+.seg-w{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.seg{display:inline-flex;gap:2px;padding:4px;border-radius:14px;background:var(--s1);box-shadow:inset 0 0 0 1px var(--hl)}
+.seg button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font-size:14px;font-weight:500;color:var(--t3);transition:background-color .2s,color .2s}
+.seg button:hover{color:var(--fg)}
+.seg button.on{background:var(--ov);color:var(--fg)}
+.seg-note{font-size:13.5px;color:var(--t4)}
+.hist{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;margin-top:20px}
+.h-list{grid-column:1/span 5;display:flex;flex-direction:column;padding:6px}
+.h-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 12px 14px;margin-bottom:6px;box-shadow:0 1px 0 var(--hl)}
+.h-head b{display:block;font-size:14.5px;font-weight:600}
+.h-head small{display:block;font-size:12.5px;color:var(--t4)}
+.h-head .tile{width:32px;height:32px;border-radius:10px;color:var(--t3)}
+.h-items{display:flex;flex-direction:column;gap:2px;position:relative}
+.vi{position:relative;display:flex;align-items:center;gap:14px;width:100%;padding:11px 12px;border-radius:14px;transition:background-color .2s,box-shadow .2s}
+.vi:hover{background:rgba(255,255,255,.035)}
+.vi.is-sel{background:var(--accbg);box-shadow:inset 0 0 0 1px rgba(255,188,80,.55)}
+.vi .tile{width:34px;height:34px;border-radius:10px;background:var(--s2);color:var(--t2)}
+.vi.is-sel .tile{background:rgba(255,188,80,.16);color:var(--acc)}
+.vi-t{flex:1;min-width:0}
+.vi-t b{display:block;font-size:14.5px;font-weight:600}
+.vi-t>span{display:block;font-size:12.5px;color:var(--t4)}
+.vi .hash{font-size:12.5px;color:var(--t3)}
+.ci-list::before{content:"";position:absolute;left:18.5px;top:30px;bottom:30px;width:1px;background:var(--bd)}
+.dot{position:relative;z-index:1;flex:none;width:14px;height:14px;border-radius:50%;background:var(--s1);box-shadow:inset 0 0 0 1.5px var(--bds)}
+.vi.is-sel .dot{background:var(--accbg);box-shadow:inset 0 0 0 1.5px var(--acc)}
+.dot.act{background:var(--acc)!important;box-shadow:0 0 0 4px rgba(255,188,80,.16)!important}
+.dot.sav{background:#D9DBD8!important;box-shadow:inset 0 0 0 1.5px #D9DBD8!important}
+.h-foot{display:flex;align-items:center;gap:8px;margin-top:auto;padding:14px 12px 10px;box-shadow:0 -1px 0 var(--hl);font-size:12.5px;color:var(--t4)}
+.h-det{grid-column:6/span 7;display:flex;flex-direction:column;padding:26px}
+.hd-t{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.hd-s{margin-top:4px;font-size:13.5px;color:var(--t4)}
+.rs{display:grid;grid-template-columns:auto minmax(12px,1fr) auto minmax(12px,1fr) auto;align-items:center;gap:12px;margin-top:20px;padding:14px 16px;border-radius:14px;background:#111315;box-shadow:inset 0 0 0 1px var(--hl)}
+.rs small{display:block;font-size:12px;color:var(--t4)}
+.rs .mono{font-size:13px}
+.rs .to{text-align:right}
+.rs .to .mono{color:var(--acc);font-weight:500}
+.rs .dash{display:block;border-top:1px dashed #55595D}
+.rs .dash.a{border-top-color:rgba(255,188,80,.6)}
+.rs>.ic{color:var(--acc)}
+.kvl{margin-top:8px}
+.kvr{display:flex;align-items:center;gap:12px;padding:14px 2px;box-shadow:0 1px 0 var(--hl);font-size:14.5px}
+.kvr>.ic{color:var(--t4)}
+.kvr .v{margin-left:auto;font-size:14px;color:var(--t3);text-align:right}
+.kvr .v2{display:block;font-size:12.5px;color:var(--t4)}
+.hd-act{display:flex;flex-direction:column;gap:12px;margin-top:auto;padding-top:22px}
+.hd-row{display:flex;gap:10px}
+.hd-row .btn-p{flex:1}
+.note{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;color:var(--t4)}
+.note .ic{margin-top:2px}
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.t-smed{--c:#FBA773;--cb:rgba(251,167,115,.14)}
+.t-malm{--c:#6ED9E4;--cb:rgba(110,217,228,.13)}
+.t-smia{--c:#7BD9BD;--cb:rgba(123,217,189,.13)}
+.tool{position:relative;display:flex;flex-direction:column;padding:28px;overflow:hidden}
+.tool::before{content:"";position:absolute;top:0;left:28px;right:28px;height:1px;background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.75}
+.tool-e{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--cb);color:var(--c)}
+.tool-e .ic{width:22px;height:22px}
+.tool-n{margin-top:22px;font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.tool-r{margin-top:2px;font-size:14px;font-weight:500;color:var(--c)}
+.tool-d{margin-top:14px;min-height:72px;font-size:15px;line-height:1.55;color:var(--t3)}
+.tv{flex:1;display:flex;flex-direction:column;gap:12px;margin-top:24px;padding:16px;border-radius:16px;background:rgba(0,0,0,.2);box-shadow:inset 0 0 0 1px var(--hl)}
+.tv-s{position:relative;display:grid;grid-template-columns:26px 1fr;column-gap:12px}
+.tv-s .n{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--cb);color:var(--c);font-size:12px;font-weight:600}
+.tv-s b{display:block;font-size:14px;font-weight:600;line-height:26px}
+.tv-s span{display:block;font-size:13px;line-height:1.45;color:var(--t4)}
+.tv-s:not(:last-child)::after{content:"";position:absolute;left:12.5px;top:30px;bottom:-10px;width:1px;background:var(--bd)}
+.tv .rs{margin-top:0;padding:12px 14px}
+.tv .rs .to .mono,.tv .rs>.ic{color:var(--c)}
+.tv .rs .dash.a{border-top-color:var(--c);opacity:.6}
+.tv-r{display:flex;justify-content:space-between;gap:12px;padding-top:12px;box-shadow:0 -1px 0 var(--hl);font-size:13.5px}
+.tv-r span{color:var(--t4)}
+.tv-r b{font-weight:500;text-align:right}
+.tv-p{display:flex;align-items:center;gap:12px;font-size:13.5px}
+.tv-p .tile{width:30px;height:30px;border-radius:9px;background:var(--cb);color:var(--c)}
+.tv-p span{flex:1;color:var(--t3)}
+.tv-p em{font-style:normal;color:var(--t4)}
+.tool-l{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:22px;padding-bottom:3px;font-size:14px;font-weight:500;box-shadow:0 1px 0 var(--bd);transition:box-shadow .2s}
+.tool-l:hover{box-shadow:0 1px 0 var(--c)}
+
+/* themes */
+.th-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.thc{position:relative;display:flex;flex-direction:column;justify-content:space-between;height:100px;padding:14px 14px 0;overflow:hidden;border-radius:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);text-align:left;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.thc:hover{transform:translateY(-2px)}
+.thc.is-sel{box-shadow:inset 0 0 0 1.5px var(--acc),0 0 0 4px rgba(255,188,80,.12)}
+.thc-t b{display:block;font-size:15px;font-weight:600;line-height:1.3}
+.thc-t small{display:block;font-size:12.5px;opacity:.7}
+.thc-ck{position:absolute;top:12px;right:12px;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--acc);color:var(--ink)}
+.thc-sw{display:flex;align-self:flex-end;width:62%;height:14px;margin-right:-14px}
+.thc-sw i{display:block;flex:1}
+.th-main{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.th-pv{grid-column:1/span 8;padding:18px}
+.th-head{display:flex;align-items:center;gap:12px;min-height:34px;margin:2px 4px 16px}
+.th-head b{font-size:17px;font-weight:600}
+.th-head .mu{font-size:13.5px;color:var(--t4)}
+.th-head .push{margin-left:auto}
+.th-desk,.app,.app-tb,.fm-side,.fm-side span,.th-sw i,.term,.code,.th-desk .ic{transition:background-color .55s var(--ease),color .55s var(--ease),border-color .55s var(--ease),box-shadow .55s var(--ease)}
+.th-desk{padding:14px;border-radius:16px}
+.th-apps{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px}
+.app{min-height:196px;overflow:hidden;border:1px solid;border-radius:12px}
+.app-tb{display:flex;align-items:center;gap:5px;height:26px;padding:0 10px;border-bottom:1px solid}
+.app-tb i{display:block;width:8px;height:8px;border-radius:50%;transition:background-color .55s}
+.fm{display:grid;grid-template-columns:94px 1fr;height:168px}
+.fm-side{display:flex;flex-direction:column;gap:2px;padding:8px 6px;border-right:1px solid;font-size:11.5px}
+.fm-side span{display:flex;align-items:center;gap:6px;padding:3px 6px;border-radius:6px}
+.fm-side .ic{width:12px;height:12px}
+.fm-grid{display:grid;grid-template-columns:repeat(2,22px);align-content:start;gap:12px 16px;padding:16px}
+.fm-grid .ic{width:22px;height:22px;stroke-width:1.5}
+.term,.code{padding:12px;font-size:11.5px;line-height:1.75}
+.term div,.code div{white-space:pre}
+.code .ln{display:inline-block;width:18px;opacity:.45}
+.cur{display:inline-block;width:7px;height:13px;vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.th-sw{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:12px}
+.th-sw i{display:block;height:30px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(128,128,128,.22)}
+.th-tg{grid-column:9/span 4;display:flex;flex-direction:column;padding:24px}
+.th-tg>b{font-size:17px;font-weight:600}
+.th-tg>span{margin-top:2px;font-size:13.5px;color:var(--t4)}
+.th-tg .kvl{margin-top:12px}
+.th-tg .kvr{font-size:14px}
+.th-tg .kvr .tile{width:32px;height:32px;border-radius:9px;background:var(--s2);color:var(--t2)}
+.okt{display:inline-flex;align-items:center;gap:6px;color:var(--ok)!important}
+.th-tg .note{margin-top:auto;padding-top:20px}
+
+/* updates + software */
+.up-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:stretch}
+.up{grid-column:1/span 7;display:flex;flex-direction:column;gap:8px;padding:8px}
+.up-st{display:flex;align-items:center;gap:20px;padding:22px;border-radius:18px;background:rgba(255,255,255,.028);box-shadow:inset 0 0 0 1px var(--hl)}
+.up-ico{display:grid;place-items:center;flex:none;width:60px;height:60px;border-radius:17px;background:var(--ov);color:var(--fg);transition:background-color .3s,color .3s}
+.up-ico.run{background:var(--accbg);color:var(--acc)}
+.up-ico.ok{background:rgba(124,213,149,.14);color:var(--ok)}
+.spin{animation:spin 1.1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.up-tx{flex:1;min-width:0}
+.up-tt{display:block;font-size:22px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.up-ds{display:block;margin-top:3px;font-size:14px;color:var(--t3)}
+.pipe{padding:18px 22px 20px;border-radius:18px;box-shadow:inset 0 0 0 1px var(--hl)}
+.pipe-h{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.pipe-h b{font-size:14.5px;font-weight:600}
+.pipe-h span{font-size:13px;color:var(--t4)}
+.pipe-s{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:16px}
+.trk{height:4px;overflow:hidden;border-radius:2px;background:rgba(255,255,255,.1)}
+.trk i{display:block;height:100%;border-radius:2px;background:var(--acc);transition-property:width;transition-timing-function:cubic-bezier(.4,.1,.3,1)}
+.ps .lb{display:flex;align-items:center;gap:7px;margin-top:10px;font-size:13px;color:var(--t4);transition:color .3s}
+.ps.on .lb{color:var(--fg)}
+.ps.done .lb{color:var(--t2)}
+.ps.done .lb .ic{color:var(--acc)}
+.pipe-n{display:flex;align-items:center;gap:8px;margin-top:18px;font-size:13px;color:var(--t4)}
+.sysl{padding:6px 22px 8px}
+.sysl>b{display:block;padding:10px 2px 4px;font-size:14px;font-weight:600;color:var(--t2)}
+.sysl .kvr:last-child{box-shadow:none}
+.swp{grid-column:8/span 5;display:flex;flex-direction:column;gap:12px;padding:14px}
+.sw-top{display:flex;align-items:center;gap:8px}
+.sw-seg{display:inline-flex;gap:2px;padding:3px;border-radius:12px;background:rgba(255,255,255,.035);box-shadow:inset 0 0 0 1px var(--hl);font-size:13px}
+.sw-seg span{display:inline-flex;align-items:center;height:30px;padding:0 11px;border-radius:9px;color:var(--t3)}
+.sw-seg span.on{background:var(--ov);color:var(--fg);font-weight:500}
+.sw-q{flex:1;display:flex;align-items:center;gap:8px;min-width:0;height:36px;padding:0 12px;border-radius:11px;background:rgba(255,255,255,.04);box-shadow:inset 0 0 0 1px var(--hl);font-size:13px;color:var(--t4);white-space:nowrap;overflow:hidden}
+.apps{overflow:hidden;border-radius:16px;box-shadow:inset 0 0 0 1px var(--hl)}
+.ap{display:flex;align-items:center;gap:12px;padding:10px 14px;font-size:14px}
+.ap+.ap{box-shadow:0 -1px 0 var(--hl)}
+.ap .tile{width:34px;height:34px;border-radius:10px}
+.ap-t{flex:1;min-width:0}
+.ap-t b{display:block;font-weight:500}
+.ap-t span{display:block;font-size:12.5px;color:var(--t4)}
+.ap .mg{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--t3)}
+.upd{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;background:rgba(124,213,149,.12);color:var(--ok);font-size:12px;font-weight:600;white-space:nowrap}
+.ap-f{display:flex;justify-content:space-between;padding:12px 14px;box-shadow:0 -1px 0 var(--hl);font-size:12.5px;color:var(--t4)}
+.smed{display:flex;align-items:center;gap:14px;padding:16px;border-radius:16px;background:rgba(251,167,115,.05);box-shadow:inset 0 0 0 1px rgba(251,167,115,.16)}
+.smed .tile{width:38px;height:38px;border-radius:11px;background:rgba(251,167,115,.14);color:#FBA773}
+.smed b{display:block;font-size:14px;font-weight:600}
+.smed b em{font-style:normal;color:#FBA773}
+.smed span{display:block;font-size:13px;color:var(--t4)}
+
+/* download */
+.dl{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:center;padding:72px 64px;overflow:hidden;border-radius:32px;isolation:isolate;box-shadow:inset 0 0 0 1px var(--hl2)}
+.dl>.wp{z-index:-2}
+.dl-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(19,22,24,.92) 0%,rgba(19,22,24,.62) 50%,rgba(19,22,24,.2) 100%)}
+.dl-l{grid-column:1/span 6}
+.dl-l .h2{font-size:clamp(40px,5cqi,72px);letter-spacing:-.038em}
+.dl-l .sp{margin-top:22px}
+.dl-l .cta{margin-top:34px}
+.dl-r{grid-column:8/span 5;padding:10px;border-radius:24px}
+.dl-rh{display:flex;align-items:center;justify-content:space-between;padding:14px 14px 16px;box-shadow:0 1px 0 var(--hl2)}
+.dl-rh b{font-size:15px;font-weight:600}
+.ist{display:flex;flex-direction:column;padding:18px 14px 8px}
+.is{position:relative;display:grid;grid-template-columns:30px 1fr;column-gap:14px;padding-bottom:20px}
+.is:not(:last-child)::before{content:"";position:absolute;left:14.5px;top:34px;bottom:4px;width:1px;background:rgba(255,255,255,.14)}
+.is .n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-size:13px;font-weight:600;color:var(--t2)}
+.is:first-child .n{background:var(--acc);box-shadow:none;color:var(--ink)}
+.is b{display:block;font-size:15px;font-weight:600;line-height:30px}
+.is span{display:block;font-size:13.5px;line-height:1.45;color:var(--t3)}
+.dl-m{padding:0 14px 4px}
+.dl-m .kvr{box-shadow:0 -1px 0 var(--hl2)}
+.dl-m a.kvr{transition:color .2s}
+.dl-m a.kvr:hover{color:var(--acc)}
+
+/* footer */
+.ft{margin-top:152px;padding:64px 0 40px;box-shadow:inset 0 1px 0 var(--hl)}
+.ft-g{display:grid;grid-template-columns:1.8fr repeat(4,minmax(0,1fr));gap:32px}
+.ft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.ft-line{max-width:22em;font-size:14.5px;color:var(--t3)}
+.ft h3{margin-bottom:14px;font-size:14px;font-weight:600}
+.ft ul{display:flex;flex-direction:column;gap:10px}
+.ft li a{font-size:14px;color:var(--t4);transition:color .2s}
+.ft li a:hover{color:var(--fg)}
+.ft-b{display:flex;justify-content:space-between;gap:16px;margin-top:56px;padding-top:24px;box-shadow:inset 0 1px 0 var(--hl);font-size:13px;color:var(--t4)}
+.ft-b-r{display:flex;gap:24px}
+.ft-b a:hover{color:var(--fg)}
+
+/* responsive: the page answers to its own width */
+@container hw (max-width:1180px){
+.search{display:none}
+.sum{flex-wrap:wrap}
+}
+@container hw (max-width:980px){
+.links,.src{display:none}
+.menu-b{display:inline-flex}
+.sh{display:block;margin-bottom:44px}
+.sh .sp{margin-top:18px}
+.hfig{height:auto}
+.hwin{position:relative;width:100%}
+.cc{display:none}
+.m-disk{display:none}
+.pf-grid{display:flex;flex-direction:column;gap:16px}
+.pf-side,.pf-main{display:contents}
+.pf-list{order:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.stage{order:2}
+.sum{order:3}
+.steps{order:4;flex-direction:row;gap:16px;margin-top:8px}
+.step{flex:1;padding-bottom:0}
+.step:not(:last-child)::before{display:none}
+.sys-top{display:block}
+.facts{margin-top:32px}
+.hist{display:flex;flex-direction:column}
+.tools{grid-template-columns:1fr}
+.tool-d{min-height:0}
+.th-row{display:flex;overflow-x:auto;margin:0 -32px 16px;padding:4px 32px 8px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.thc{flex:0 0 200px;scroll-snap-align:start}
+.th-main,.up-grid{display:flex;flex-direction:column}
+.dl{display:flex;flex-direction:column;align-items:stretch;gap:40px;padding:56px 40px}
+.ft-g{grid-template-columns:repeat(2,minmax(0,1fr))}
+.ft-brand{grid-column:1/-1}
+}
+@container hw (max-width:860px){
+.stage{height:410px}
+.lay-k{transform:translate(-50%,-50%) scale(.85)}
+.cols3{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cols3 .col:last-child{display:none}
+}
+@container hw (max-width:640px){
+.wrap{padding:0 20px}
+.nav .btn-p{height:40px;padding:0 14px}
+.hero{padding-top:124px}
+.h1{font-size:44px;letter-spacing:-.03em}
+.lede{font-size:17px}
+.cta{flex-wrap:wrap}
+.cta .btn{flex:1 1 auto}
+.hfig{margin-top:48px}
+.hwin{display:none}
+.cc{position:relative;left:auto;top:auto;display:block;width:100%;max-width:360px;margin:0 auto}
+.sec{padding-top:104px}
+.h2{font-size:34px}
+.sp{font-size:16.5px}
+.pf-list{grid-template-columns:1fr}
+.pf{padding:12px 14px}
+.stage{height:auto;aspect-ratio:784/480;border-radius:18px}
+.lay-k{transform:translate(-50%,-50%) scale(.445)}
+.st-b{height:15px;font-size:0}
+.st-b svg,.st-b .ws,.st-b .hmark{display:none}
+.steps{flex-direction:column;gap:0}
+.step{padding-bottom:16px}
+.step:not(:last-child)::before{display:block}
+.sum{flex-direction:column;align-items:stretch;gap:16px}
+.sum-m{padding:14px 0;box-shadow:0 -1px 0 var(--hl2),0 1px 0 var(--hl2);flex-wrap:wrap;gap:16px 28px}
+.sum-b{flex-wrap:wrap}
+.sum-b .btn{flex:1 1 auto}
+.seg{display:flex;width:100%}
+.seg button{flex:1;padding:0 10px;font-size:13px}
+.seg button .ic{display:none}
+.h-det{padding:20px}
+.hd-t{font-size:22px}
+.hd-row{flex-direction:column}
+.tool{padding:24px}
+.th-row{margin:0 -20px 16px;padding:4px 20px 8px}
+.thc{flex-basis:168px}
+.th-pv{padding:12px}
+.th-head{flex-wrap:wrap}
+.th-apps{grid-template-columns:1fr 1fr}
+.fmw{display:none}
+.th-sw{grid-template-columns:repeat(4,minmax(0,1fr))}
+.up-st{flex-wrap:wrap;padding:18px}
+.up-st .btn{width:100%}
+.pipe{padding:16px}
+.pipe-s{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:16px}
+.sysl{padding:4px 16px 6px}
+.sw-seg{display:none}
+.dl{padding:40px 20px;border-radius:24px}
+.dl-r{padding:6px}
+.ft{margin-top:104px}
+.ft-g{grid-template-columns:1fr 1fr;gap:28px}
+.ft-b{flex-direction:column}
+}
+@media (prefers-reduced-motion:reduce){
+html,.phone{scroll-behavior:auto}
+.hw *,.hw *::before,.hw *::after{animation:none!important;transition:none!important}
+}
+</style>
+</helmet>
+<div class="hw" style="width: 100%;">
+<header class="nav">
+<div class="wrap nav-in">
+<a class="brand" href="#top"><span class="hmark" aria-hidden="true"></span><span>Herda</span></a>
+<nav class="links" aria-label="Primary">
+<a href="#desktop">Desktop</a>
+<a href="#system">System</a>
+<a href="#tools">Tools</a>
+<a href="#themes">Themes</a>
+<a href="#updates">Updates</a>
+<a href="#docs">Docs</a>
+</nav>
+<div class="nav-r">
+<a class="search" href="#docs"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.search}}"></path></svg><span>Search docs</span><span class="kbd mono" aria-hidden="true">/</span></a>
+<a class="btn btn-g btn-sm src" href="#source"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.code}}"></path></svg>Source</a>
+<a class="btn btn-p btn-sm" href="#download">Download</a>
+<button class="menu-b" type="button" aria-label="{{navLabel}}" aria-expanded="{{navOpen}}" aria-controls="mnav" onClick="{{toggleNav}}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{navIcon}}"></path></svg></button>
+</div>
+</div>
+<sc-if value="{{navOpen}}" hint-placeholder-val="{{false}}">
+<div class="sheet" id="mnav">
+<nav aria-label="Menu">
+<sc-for list="{{sheetRows}}" as="m" hint-placeholder-count="7">
+<a class="srow" href="{{m.h}}" onClick="{{m.close}}"><span class="tile" style="background: {{m.bg}}; color: {{m.fg}};"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{m.i}}"></path></svg></span><span class="srow-l">{{m.l}}</span><svg class="ic ic-xs muted" viewBox="0 0 24 24" aria-hidden="true"><path d="{{m.ch}}"></path></svg></a>
+</sc-for>
+</nav>
+<a class="btn btn-p sheet-cta" href="#download" onClick="{{closeNav}}">Download Herda</a>
+</div>
+</sc-if>
+</header>
+
+<main>
+<section class="hero" id="top">
+<div class="wp" aria-hidden="true"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="e3"></i><i class="e5"></i><i class="glow"><i class="e1g"></i></i><i class="e1"></i><i class="e2"></i><i class="e4"></i><i class="fade"></i></div>
+<div class="wrap">
+<h1 class="h1"><span class="rv d1">Calm on the surface.</span><br><span class="rv d2">Solid underneath.</span></h1>
+<p class="lede rv d3">Herda is an independent Linux operating system. A quiet desktop you can reshape to fit how you work, on a system where every update is reviewed, versioned and reversible.</p>
+<div class="cta rv d4">
+<a class="btn btn-p btn-lg" href="#download"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.download}}"></path></svg>Download Herda</a>
+<a class="btn btn-g btn-lg" href="#docs">Read the documentation</a>
+</div>
+<p class="meta rv d4">Herda [Release] · Signed release · [Download size]</p>
+
+<figure class="hfig rv d5" role="img" aria-label="The Herda Settings window with the control centre open in front of it">
+<div class="win hwin">
+<div class="win-top">
+<span class="win-title">Settings</span>
+<span class="w-search"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.search}}"></path></svg>Search settings</span>
+<span class="esc">Esc</span>
+</div>
+<div class="win-body">
+<p class="w-h1">Settings</p>
+<p class="w-sub">Everything about this computer, in one place.</p>
+<div class="machine">
+<div class="m-thumb"><div class="wp"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="e1"></i><i class="e2"></i></div><div class="m-mini"><i class="a"></i><i style="width: 80%;"></i><i style="width: 64%;"></i><i style="width: 72%;"></i></div></div>
+<div><p class="m-host">herda-desktop</p><p class="m-spec">Herda [Release] · AMD Ryzen 7 · 32 GB</p></div>
+<div class="m-disk"><b>412 GB free</b>of 1 TB<div class="bar"><i style="width: 59%;"></i></div></div>
+<span class="w-btn"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.refresh}}"></path></svg>Check for updates</span>
+</div>
+<div class="cols3">
+<div class="col"><p class="col-h">Personal</p><div class="list">
+<sc-for list="{{personal}}" as="r" hint-placeholder-count="7">
+<div class="row"><span class="tile" style="background: {{r.bg}}; color: {{r.fg}};"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{r.i}}"></path></svg></span><span class="lab">{{r.l}}</span><span class="val">{{r.v}}</span><svg class="ic ic-xs ch" viewBox="0 0 24 24"><path d="{{r.ch}}"></path></svg></div>
+</sc-for>
+</div></div>
+<div class="col"><p class="col-h">Devices</p><div class="list">
+<sc-for list="{{devices}}" as="r" hint-placeholder-count="7">
+<div class="row"><span class="tile" style="background: {{r.bg}}; color: {{r.fg}};"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{r.i}}"></path></svg></span><span class="lab">{{r.l}}</span><span class="val">{{r.v}}</span><svg class="ic ic-xs ch" viewBox="0 0 24 24"><path d="{{r.ch}}"></path></svg></div>
+</sc-for>
+</div></div>
+<div class="col"><p class="col-h">System</p><div class="list">
+<sc-for list="{{system}}" as="r" hint-placeholder-count="7">
+<div class="row"><span class="tile" style="background: {{r.bg}}; color: {{r.fg}};"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{r.i}}"></path></svg></span><span class="lab">{{r.l}}</span><span class="val">{{r.v}}</span><svg class="ic ic-xs ch" viewBox="0 0 24 24"><path d="{{r.ch}}"></path></svg></div>
+</sc-for>
+</div></div>
+</div>
+</div>
+</div>
+
+<div class="cc">
+<div class="cc-top"><span class="grab"></span><span class="dt"></span><span class="dt"></span><span class="dt"></span></div>
+<div class="cc-grid">
+<div class="qt on"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.wifi}}"></path></svg><span class="qt-t"><b>Wi-Fi</b><small>Home 5G</small></span><span class="qt-x"><svg class="ic ic-xs" viewBox="0 0 24 24"><path d="{{ic.chevR}}"></path></svg></span></div>
+<div class="qt"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.bt}}"></path></svg><span class="qt-t"><b>Bluetooth</b><small>On</small></span><span class="qt-x"><svg class="ic ic-xs" viewBox="0 0 24 24"><path d="{{ic.chevR}}"></path></svg></span></div>
+<div class="qt"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.timer}}"></path></svg><span class="qt-t"><b>Focus</b><small>Off</small></span></div>
+<div class="qt"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.battery}}"></path></svg><span class="qt-t"><b>Battery</b><small>Charging</small></span></div>
+</div>
+<div class="sls">
+<div class="sl"><i style="width: 62%;"></i><span><svg class="ic ic-xs" viewBox="0 0 24 24"><path d="{{ic.volume}}"></path></svg>Volume</span></div>
+<div class="sl"><i style="width: 78%;"></i><span><svg class="ic ic-xs" viewBox="0 0 24 24"><path d="{{ic.sun}}"></path></svg>Brightness</span></div>
+</div>
+<div class="cc-row"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.grid}}"></path></svg><span>Desktop profile</span><span class="v">{{act.n}}</span></div>
+</div>
+</figure>
+</div>
+</section>
+
+<section class="sec" id="desktop" aria-labelledby="desk-h">
+<div class="wrap">
+<div class="sh">
+<h2 class="h2" id="desk-h">Change the whole desktop, not just the wallpaper.</h2>
+<p class="sp">A desktop profile rearranges the launcher, bar, panels and widgets together. Selecting one only previews it. Malm prepares an exact plan, and nothing changes until you apply it.</p>
+</div>
+<div class="pf-grid">
+<div class="pf-side">
+<div class="pf-list" role="group" aria-label="Desktop profiles">
+<sc-for list="{{profiles}}" as="p" hint-placeholder-count="4">
+<button class="pf {{p.cls}}" type="button" aria-pressed="{{p.sel}}" onClick="{{p.pick}}">
+<svg class="pf-g" viewBox="0 0 56 40" aria-hidden="true"><path d="{{p.g}}"></path></svg>
+<span class="pf-t"><span class="pf-n">{{p.n}}<sc-if value="{{p.isAct}}" hint-placeholder-val="{{false}}"><span class="badge">Active</span></sc-if></span><span class="pf-d">{{p.d}}</span></span>
+</button>
+</sc-for>
+</div>
+<ol class="steps" aria-label="How a profile is applied">
+<sc-for list="{{steps}}" as="st" hint-placeholder-count="3">
+<li class="step {{st.cls}}"><span class="st-n"><sc-if value="{{st.done}}" hint-placeholder-val="{{false}}"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{st.ck}}"></path></svg></sc-if><sc-if value="{{st.todo}}" hint-placeholder-val="{{true}}">{{st.n}}</sc-if></span><span class="st-b"><b>{{st.t}}</b><span>{{st.d}}</span></span></li>
+</sc-for>
+</ol>
+</div>
+
+<div class="pf-main">
+<div class="stage" role="img" aria-label="{{stageLabel}}">
+<div class="wb"><i class="b1"></i><i class="b2"></i><i class="glow"><i class="l1g"></i></i><i class="l1"></i><i class="l2"></i></div>
+
+<sc-if value="{{isSeam}}" hint-placeholder-val="{{true}}">
+<div class="lay"><div class="lay-k">
+<div class="sbar"><span class="smk"><span class="hmark"></span><span class="ws sm-ws"><i></i><i></i><i></i><i class="on"></i><i></i></span></span><span class="chip sm-chip"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.wifi}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.volume}}"></path></svg><span>Sat 19 Sep</span><span>01:04</span></span></div>
+<div class="sm-l">
+<div class="sm-h"><b>herda</b><span class="sm-hr"><span>01:04</span><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.slidersH}}"></path></svg><span class="sm-bt">100%<svg class="ic" viewBox="0 0 24 24"><path d="{{ic.battery}}"></path></svg></span></span></div>
+<div class="sm-s"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.search}}"></path></svg>Search apps, files and actions</div>
+<div class="sm-sec"><b>Apps</b><span>All apps<svg class="ic" viewBox="0 0 24 24"><path d="{{ic.arrowR}}"></path></svg></span></div>
+<div class="sm-g">
+<sc-for list="{{seamApps}}" as="a" hint-placeholder-count="8">
+<span class="sm-a {{a.cls}}"><svg class="ic" viewBox="0 0 24 24" style="color: {{a.fg}};"><path d="{{a.i}}"></path></svg><span>{{a.l}}</span></span>
+</sc-for>
+</div>
+<div class="sm-sec"><b>Continue</b><span>Record workspace<svg class="ic" viewBox="0 0 24 24"><path d="{{ic.chevR}}"></path></svg></span></div>
+<div class="sm-c">
+<sc-for list="{{seamRecent}}" as="r" hint-placeholder-count="2">
+<div class="sm-r"><span class="tile"><svg class="ic" viewBox="0 0 24 24"><path d="{{r.fi}}"></path></svg></span><span class="sm-rt"><b>{{r.t}}</b><small>{{r.s}}</small></span><svg class="ic" viewBox="0 0 24 24"><path d="{{r.ri}}"></path></svg></div>
+</sc-for>
+</div>
+<div class="sm-tabs"><span class="on"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.grid}}"></path></svg>Apps</span><span><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.monitor}}"></path></svg>Workspaces</span><span><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.gear}}"></path></svg>Settings</span></div>
+</div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isAstral}}" hint-placeholder-val="{{false}}">
+<div class="lay"><div class="as-t"></div><div class="lay-k">
+<div class="as-top"><span class="chip">09:06</span></div>
+<div class="as-r glass">
+<sc-for list="{{rail}}" as="b" hint-placeholder-count="6">
+<span class="b {{b.cls}}"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{b.i}}"></path></svg></span>
+</sc-for>
+</div>
+<div class="as-c glass">
+<div class="as-h"><span class="tile"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.app}}"></path></svg></span><div><i class="sk hi" style="width: 56%;"></i><i class="sk" style="width: 34%;"></i></div></div>
+<i class="sk am" style="width: 44%;"></i>
+<i class="sk" style="width: 88%;"></i>
+<i class="sk" style="width: 72%;"></i>
+<i class="sk" style="width: 60%;"></i>
+</div>
+<div class="as-m glass"><b>09:06</b><span>Thursday 17 September</span></div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isStudio}}" hint-placeholder-val="{{false}}">
+<div class="lay"><div class="st-bg"></div>
+<div class="st-b"><span class="hmark"></span><span class="ws"><i class="on"></i><i></i><i></i></span><span class="push">Thu 17 Sep 09:06</span></div>
+<div class="lay-k">
+<div class="st-w st-w1"><i class="sk hi" style="width: 38%;"></i><i class="sk" style="width: 86%; margin-top: 10px;"></i><i class="sk" style="width: 78%;"></i><i class="sk" style="width: 82%;"></i><i class="sk" style="width: 54%;"></i><i class="sk" style="width: 70%; margin-top: 14px;"></i><i class="sk" style="width: 64%;"></i><i class="sk" style="width: 40%;"></i></div>
+<div class="st-w st-w2"><i class="sk gr" style="width: 46%;"></i><i class="sk" style="width: 80%; margin-top: 10px;"></i><i class="sk" style="width: 66%;"></i><i class="sk" style="width: 74%;"></i></div>
+<div class="st-e">
+<sc-for list="{{edge}}" as="b" hint-placeholder-count="5">
+<span class="b {{b.cls}}"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{b.i}}"></path></svg></span>
+</sc-for>
+</div>
+</div></div>
+</sc-if>
+
+<sc-if value="{{isDesktop}}" hint-placeholder-val="{{false}}">
+<div class="lay"><div class="lay-k">
+<div class="dk-w glass">
+<div class="dk-tb"><i></i><i></i><i></i><span>Files</span></div>
+<div class="dk-bd"><i class="sk hi" style="width: 42%;"></i><i class="sk" style="width: 86%; margin-top: 8px;"></i><i class="sk" style="width: 74%;"></i><i class="sk" style="width: 80%;"></i><i class="sk" style="width: 58%;"></i></div>
+</div>
+<div class="tb glass">
+<span class="tb-ws"><i class="tb-dot"></i><span><b>Record</b><small>0 windows</small></span><svg class="ic ic-xs" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+<i class="tb-sep"></i>
+<span class="tb-apps">
+<sc-for list="{{task}}" as="b" hint-placeholder-count="6">
+<span class="tb-a {{b.cls}}"><svg class="ic" viewBox="0 0 24 24"><path d="{{b.i}}"></path></svg><sc-if value="{{b.run}}" hint-placeholder-val="{{false}}"><i class="tb-run"></i></sc-if></span>
+</sc-for>
+</span>
+<span class="tb-tray"><i class="tb-sep"></i><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.wifi}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.volume}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.battery}}"></path></svg><span class="tb-clk"><b>00:52</b><small>19 Sep</small></span></span>
+</div>
+</div></div>
+</sc-if>
+</div>
+
+<div class="sum panel" aria-live="polite">
+<sc-if value="{{sumCurrent}}" hint-placeholder-val="{{true}}">
+<div class="sum-a"><b>{{cur.n}}</b><span>{{cur.d}}</span></div>
+<div class="sum-m"><div class="kv"><small>Desktop layout</small><b>{{cur.n}}<span class="mu">· in use</span></b></div><div class="kv"><small>Compositor</small><b>Mango</b></div></div>
+<div class="sum-b"><button class="btn btn-g btn-sm" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.sliders}}"></path></svg>Customize</button></div>
+</sc-if>
+<sc-if value="{{sumPreview}}" hint-placeholder-val="{{false}}">
+<div class="sum-a"><b>{{cur.n}}</b><span>{{cur.d}}</span></div>
+<div class="sum-m"><div class="kv"><small>Desktop layout</small><b>{{act.n}}<svg class="ic ic-xs muted" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.arrowR}}"></path></svg><span class="amb">{{cur.n}}</span></b></div><div class="kv"><small>Compositor</small><b>Mango<span class="mu">· unchanged</span></b></div></div>
+<div class="sum-b"><button class="btn btn-g btn-sm" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.sliders}}"></path></svg>Customize</button><button class="btn btn-p btn-sm" type="button" onClick="{{review}}">Review changes</button></div>
+</sc-if>
+<sc-if value="{{sumPlan}}" hint-placeholder-val="{{false}}">
+<div class="sum-a"><b>Plan for {{cur.n}}</b><span>Only your desktop configuration changes. Apps and files stay as they are.</span></div>
+<div class="sum-m"><div class="kv"><small>Configuration files</small><b>[N] changed</b></div><div class="kv"><small>Current desktop</small><b>Kept</b></div></div>
+<div class="sum-b"><button class="btn btn-g btn-sm" type="button" onClick="{{back}}">Back</button><button class="btn btn-p btn-sm" type="button" onClick="{{apply}}">Apply {{cur.n}}</button></div>
+</sc-if>
+<sc-if value="{{sumDone}}" hint-placeholder-val="{{false}}">
+<div class="sum-a"><b><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.checkC}}"></path></svg>{{act.n}} is applied</b><span>Your previous desktop is kept in Configuration history.</span></div>
+<div class="sum-b"><button class="btn btn-g btn-sm" type="button" onClick="{{undo}}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg>Undo</button><a class="btn btn-g btn-sm" href="#system">Configuration history</a></div>
+</sc-if>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec" id="system" aria-labelledby="sys-h">
+<div class="wrap">
+<div class="sys-top">
+<div class="sh-l">
+<h2 class="h2" id="sys-h">Every change can be undone.</h2>
+<p class="sp">Herda keeps the system in versions. Installing or updating software applies right away and records a new system version, and earlier versions stay until you remove them. Your desktop settings keep a history of their own.</p>
+</div>
+<div class="facts panel">
+<div class="fact"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.layers}}"></path></svg></span><div><b>Two separate histories</b><span>Restoring a software version leaves your desktop settings as they are.</span></div></div>
+<div class="fact"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shieldCheck}}"></path></svg></span><div><b>A way back after every release</b><span>If a new release doesn’t start correctly, Herda returns to the system that did.</span></div></div>
+<div class="fact"><span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.drive}}"></path></svg></span><div><b>Kept until you say so</b><span>Earlier versions stay on disk until you remove them in Storage.</span></div></div>
+</div>
+</div>
+
+<div class="seg-w">
+<div class="seg" role="group" aria-label="History">
+<button class="{{tabSysCls}}" type="button" aria-pressed="{{tabSys}}" onClick="{{showSys}}"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.layers}}"></path></svg>System versions</button>
+<button class="{{tabCfgCls}}" type="button" aria-pressed="{{tabCfg}}" onClick="{{showCfg}}"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.history}}"></path></svg>Configuration history</button>
+</div>
+<span class="seg-note">{{tabNote}}</span>
+</div>
+
+<sc-if value="{{tabSys}}" hint-placeholder-val="{{true}}">
+<div class="hist">
+<div class="h-list panel">
+<div class="h-head"><div><b>Retained versions</b><small>5 versions · running <span class="mono">00000067</span></small></div><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.refresh}}"></path></svg></span></div>
+<div class="h-items" role="group" aria-label="Retained versions">
+<sc-for list="{{versions}}" as="v" hint-placeholder-count="5">
+<button class="vi {{v.cls}}" type="button" aria-pressed="{{v.sel}}" onClick="{{v.pick}}">
+<span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{v.ic}}"></path></svg></span>
+<span class="vi-t"><b>Version <span class="mono">{{v.id}}</span></b><span>{{v.c}} · {{v.w}}</span></span>
+<span class="badge {{v.bcls}}">{{v.badge}}</span>
+</button>
+</sc-for>
+</div>
+<p class="h-foot"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.info}}"></path></svg>Versions are kept until you remove them in Storage.</p>
+</div>
+<div class="h-det panel" aria-live="polite">
+<sc-if value="{{vNotCur}}" hint-placeholder-val="{{true}}">
+<h3 class="hd-t">Version <span class="mono">{{vd.id}}</span></h3>
+<p class="hd-s">Retained software version</p>
+<div class="rs"><div><small>Running now</small><span class="mono">00000067</span></div><i class="dash"></i><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg><i class="dash a"></i><div class="to"><small>Restore to</small><span class="mono">{{vd.id}}</span></div></div>
+<div class="kvl">
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.history}}"></path></svg>Change<span class="v">{{vd.c}}</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.layers}}"></path></svg>Based on<span class="v">{{vd.base}}</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.box}}"></path></svg>Package changes<span class="v">Not reviewed yet</span></div>
+</div>
+<div class="hd-act">
+<button class="btn btn-p btn-block" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg>Review package differences</button>
+<p class="note">Restoring applies immediately. Restart open applications afterwards; kernel, boot files and desktop settings stay as they are.</p>
+</div>
+</sc-if>
+<sc-if value="{{vIsCur}}" hint-placeholder-val="{{false}}">
+<h3 class="hd-t">Version <span class="mono">00000067</span></h3>
+<p class="hd-s">The version you are running now</p>
+<div class="kvl">
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.history}}"></path></svg>Change<span class="v">Software updated</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.layers}}"></path></svg>Based on<span class="v">Version 00000066</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.clock}}"></path></svg>Started<span class="v">Today, 08:41</span></div>
+</div>
+<div class="hd-act"><p class="note"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.info}}"></path></svg>Choose an earlier version to compare it with this one and restore it.</p></div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{tabCfg}}" hint-placeholder-val="{{false}}">
+<div class="hist">
+<div class="h-list panel">
+<div class="h-head"><div><b>Saved configurations</b><small>Malm keeps up to 256</small></div><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.refresh}}"></path></svg></span></div>
+<div class="h-items ci-list" role="group" aria-label="Saved configurations">
+<sc-for list="{{cfgs}}" as="c" hint-placeholder-count="5">
+<button class="vi {{c.cls}}" type="button" aria-pressed="{{c.sel}}" onClick="{{c.pick}}">
+<span class="dot {{c.k}}"></span>
+<span class="vi-t"><b>{{c.t}}</b><span>{{c.c}} · {{c.w}}</span></span>
+<sc-if value="{{c.isAct}}" hint-placeholder-val="{{false}}"><span class="badge">Active</span></sc-if>
+<sc-if value="{{c.isSav}}" hint-placeholder-val="{{false}}"><span class="badge mu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{c.pin}}"></path></svg>Saved</span></sc-if>
+<sc-if value="{{c.isPlain}}" hint-placeholder-val="{{true}}"><span class="hash mono">{{c.h}}</span></sc-if>
+</button>
+</sc-for>
+</div>
+<p class="h-foot"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.info}}"></path></svg>Save points stay until you release them.</p>
+</div>
+<div class="h-det panel" aria-live="polite">
+<sc-if value="{{cNotAct}}" hint-placeholder-val="{{true}}">
+<h3 class="hd-t">{{cd.t}}</h3>
+<p class="hd-s">Configuration <span class="mono">{{cd.h}}</span> · default</p>
+<div class="rs"><div><small>Active</small><span class="mono">e41c9a0</span></div><i class="dash"></i><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg><i class="dash a"></i><div class="to"><small>Restore to</small><span class="mono">{{cd.h}}</span></div></div>
+<div class="kvl">
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.history}}"></path></svg>Change<span class="v">{{cd.c}}</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.file}}"></path></svg>Managed files<span class="v">[N]</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.compare}}"></path></svg><span>View changes<span class="v2">Compare with the active configuration</span></span><span class="v"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.chevR}}"></path></svg></span></div>
+</div>
+<div class="hd-act">
+<p class="note"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shield}}"></path></svg>Your files are kept.</p>
+<div class="hd-row"><button class="btn btn-g" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.pin}}"></path></svg>Keep</button><button class="btn btn-p" type="button"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg>Review restore</button></div>
+</div>
+</sc-if>
+<sc-if value="{{cIsAct}}" hint-placeholder-val="{{false}}">
+<h3 class="hd-t">Active configuration</h3>
+<p class="hd-s">Configuration <span class="mono">e41c9a0</span> · default</p>
+<div class="kvl">
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.history}}"></path></svg>Change<span class="v">Desktop configuration</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.file}}"></path></svg>Managed files<span class="v">[N]</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.clock}}"></path></svg>Deployed<span class="v">Today, 09:02</span></div>
+</div>
+<div class="hd-act"><p class="note"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.info}}"></path></svg>This is the configuration your desktop uses now. Choose an earlier one to review a restore.</p></div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</section>
+
+<section class="sec" id="tools" aria-labelledby="tools-h">
+<div class="wrap">
+<div class="sh">
+<h2 class="h2" id="tools-h">Built on its own tools.</h2>
+<p class="sp">The work behind Settings is done by tools made for Herda. Each one appears by name wherever it acts on your system, so you always know what is making a change.</p>
+</div>
+<div class="tools">
+<article class="tool panel t-smed">
+<span class="tool-e"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.hammer}}"></path></svg></span>
+<h3 class="tool-n">Smed</h3>
+<p class="tool-r">Software</p>
+<p class="tool-d">Installs, updates and removes software. Every installation is reviewed first, and each one becomes a new system version.</p>
+<div class="tv">
+<div class="tv-s"><span class="n">1</span><div><b>Review installation</b><span>See every package it would add or change.</span></div></div>
+<div class="tv-s"><span class="n">2</span><div><b>Install</b><span>Applied right away, through pkg’s own authentication.</span></div></div>
+<div class="tv-s"><span class="n">3</span><div><b>A new system version</b><span>Earlier versions stay available.</span></div></div>
+</div>
+<a class="tool-l" href="#docs">Smed documentation</a>
+</article>
+<article class="tool panel t-malm">
+<span class="tool-e"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.ore}}"></path></svg></span>
+<h3 class="tool-n">Malm</h3>
+<p class="tool-r">Review and deploy</p>
+<p class="tool-d">Resolves Smia’s configuration and deploys it. It prepares an exact plan before each change and keeps every configuration it deploys.</p>
+<div class="tv">
+<div class="rs"><div><small>Active</small><span class="mono">e41c9a0</span></div><i class="dash"></i><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg><i class="dash a"></i><div class="to"><small>Restore to</small><span class="mono">7b2f3d1</span></div></div>
+<div class="tv-r"><span>Configurations kept</span><b>Up to 256</b></div>
+<div class="tv-r"><span>Save points</span><b>Until you release them</b></div>
+<div class="tv-r"><span>Your files</span><b>Always kept</b></div>
+</div>
+<a class="tool-l" href="#docs">Malm documentation</a>
+</article>
+<article class="tool panel t-smia">
+<span class="tool-e"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.flame}}"></path></svg></span>
+<h3 class="tool-n">Smia</h3>
+<p class="tool-r">Desktop configuration</p>
+<p class="tool-d">The configuration your desktop is built from, for Mango, Niri and Hyprland. It layers the compositor, the look, the machine and your own overrides into one source.</p>
+<div class="tv">
+<div class="lyrs" aria-label="Configuration layers, applied in order">
+<span class="lyr mono">compositor</span>
+<span class="lyr mono">+ look</span>
+<span class="lyr mono">+ machine</span>
+<span class="lyr mono">+ personal overrides</span>
+</div>
+<div class="tv-r"><span>Compositors</span><b class="chips"><span class="chip2">Mango</span><span class="chip2">Niri</span><span class="chip2">Hyprland</span></b></div>
+</div>
+<a class="tool-l" href="#docs">Smia documentation</a>
+</article>
+</div>
+
+<div class="flow panel">
+<div class="flow-h">
+<h3>From configuration to desktop</h3>
+<p>Smia is the source. Malm reviews and deploys it, smia-session activates it, and the Herda shell draws what you see.</p>
+</div>
+<ol class="flow-s">
+<li class="fs t-smia"><span class="fs-k">Smia</span><b>Configuration</b><span class="fs-code mono">compositor + look + machine + personal overrides</span></li>
+<li class="fs t-malm"><span class="fs-k">Malm</span><b>Review and deploy</b><span class="fs-d">Resolves the layers into an exact plan you review before anything changes.</span></li>
+<li class="fs t-out"><span class="fs-k">Deployed</span><b>Settings and bindings</b><span class="fs-d">Settings, contributions and theme bindings.</span></li>
+<li class="fs t-smia"><span class="fs-k">smia-session</span><b>Activation</b><span class="fs-d">The deployed configuration becomes your running session.</span></li>
+<li class="fs t-herda"><span class="fs-k">Herda shell</span><b>Your desktop</b><span class="fs-d">Renders the bar and launcher, alongside selected desktop services.</span></li>
+</ol>
+<div class="flow-g">
+<span class="tile"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"></path></svg></span>
+<p><b>Gnist</b> changes themes at runtime. It reads one palette, renders theme files for each application and publishes the result under a stable <span class="mono">current</span> path.</p>
+<a class="tool-l" href="#themes">Themes</a>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec" id="themes" aria-labelledby="th-h">
+<div class="wrap">
+<div class="sh-l">
+<h2 class="h2" id="th-h">One palette, everywhere you look.</h2>
+<p class="sp">A theme sets the colours for the whole system at once: the desktop shell, your applications, the terminal and the editor, icons and wallpapers. Gnist reads one palette, renders a theme file for each application and switches them while you work.</p>
+</div>
+<div class="th-row" role="group" aria-label="Installed themes">
+<sc-for list="{{themes}}" as="t" hint-placeholder-count="5">
+<button class="thc {{t.cls}}" type="button" aria-pressed="{{t.sel}}" onClick="{{t.pick}}" style="background: {{t.s1}}; color: {{t.fg}};">
+<span class="thc-t"><b>{{t.n}}</b><small>{{t.m}}</small></span>
+<sc-if value="{{t.isCur}}" hint-placeholder-val="{{false}}"><span class="thc-ck"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{t.ck}}"></path></svg></span></sc-if>
+<span class="thc-sw" aria-hidden="true"><i style="background: {{t.s2}};"></i><i style="background: {{t.ac}};"></i><i style="background: {{t.gr}};"></i><i style="background: {{t.bl}};"></i></span>
+</button>
+</sc-for>
+</div>
+<div class="th-main">
+<div class="th-pv panel">
+<div class="th-head">
+<b>{{th.n}}</b><span class="mu">{{th.m}} · Managed with Gnist</span>
+<span class="push">
+<sc-if value="{{thIsCur}}" hint-placeholder-val="{{true}}"><span class="badge"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.check}}"></path></svg>Current</span></sc-if>
+<sc-if value="{{thNotCur}}" hint-placeholder-val="{{false}}"><button class="btn btn-p btn-xs" type="button" onClick="{{applyTheme}}">Apply {{th.n}}</button></sc-if>
+</span>
+</div>
+<div class="th-desk" role="img" aria-label="{{thLabel}}" style="background: {{th.bg}};">
+<div class="th-apps">
+<div class="app fmw" style="background: {{th.s1}}; border-color: {{th.bd}}; color: {{th.fg}};">
+<div class="app-tb" style="background: {{th.s2}}; border-color: {{th.bd}};"><i style="background: {{th.rd}};"></i><i style="background: {{th.ac}};"></i><i style="background: {{th.gr}};"></i></div>
+<div class="fm">
+<div class="fm-side" style="border-color: {{th.bd}};">
+<span style="background: {{th.sel}}; color: {{th.ac}};"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg>Home</span>
+<span><svg class="ic" viewBox="0 0 24 24" style="color: {{th.ac}};"><path d="{{ic.folder}}"></path></svg>Music</span>
+<span><svg class="ic" viewBox="0 0 24 24" style="color: {{th.ac}};"><path d="{{ic.folder}}"></path></svg>Photos</span>
+<span><svg class="ic" viewBox="0 0 24 24" style="color: {{th.ac}};"><path d="{{ic.folder}}"></path></svg>Videos</span>
+<span><svg class="ic" viewBox="0 0 24 24" style="color: {{th.ac}};"><path d="{{ic.folder}}"></path></svg>Games</span>
+<span><svg class="ic" viewBox="0 0 24 24" style="color: {{th.ac}};"><path d="{{ic.folder}}"></path></svg>Notes</span>
+</div>
+<div class="fm-grid" style="color: {{th.ac}};"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.folder}}"></path></svg></div>
+</div>
+</div>
+<div class="app mono" style="background: {{th.s1}}; border-color: {{th.bd}}; color: {{th.fg}};">
+<div class="app-tb" style="background: {{th.s2}}; border-color: {{th.bd}};"><i style="background: {{th.rd}};"></i><i style="background: {{th.ac}};"></i><i style="background: {{th.gr}};"></i></div>
+<div class="term"><div style="color: {{th.mu}};">~</div><div>$ git status</div><div style="color: {{th.gr}};">main ✓ clean</div><div style="color: {{th.ac}};">3 files changed</div><div>$ ls <i class="cur" style="background: {{th.ac}};"></i></div></div>
+</div>
+<div class="app mono" style="background: {{th.s1}}; border-color: {{th.bd}}; color: {{th.fg}};">
+<div class="app-tb" style="background: {{th.s2}}; border-color: {{th.bd}};"><i style="background: {{th.rd}};"></i><i style="background: {{th.ac}};"></i><i style="background: {{th.gr}};"></i></div>
+<div class="code"><div><span class="ln">1</span><span style="color: {{th.mg}};">def</span> <span style="color: {{th.bl}};">main</span>():</div><div><span class="ln">2</span>  print(<span style="color: {{th.gr}};">"Hello"</span>)</div><div><span class="ln">3</span></div><div><span class="ln">4</span><span style="color: {{th.mu}};"># ready</span></div><div><span class="ln">5</span><span style="color: {{th.mg}};">main</span>()</div></div>
+</div>
+</div>
+<div class="th-sw"><i style="background: {{th.bg}};"></i><i style="background: {{th.s2}};"></i><i style="background: {{th.fg}};"></i><i style="background: {{th.ac}};"></i><i style="background: {{th.rd}};"></i><i style="background: {{th.gr}};"></i><i style="background: {{th.bl}};"></i><i style="background: {{th.mg}};"></i></div>
+</div>
+</div>
+<div class="th-tg panel">
+<b>Theme targets</b>
+<span>Gnist renders each target from one palette.</span>
+<div class="kvl">
+<div class="kvr"><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.monitor}}"></path></svg></span>Desktop shell<sc-if value="{{thIsCur}}" hint-placeholder-val="{{true}}"><span class="v okt"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.checkC}}"></path></svg>Palette ready</span></sc-if><sc-if value="{{thNotCur}}" hint-placeholder-val="{{false}}"><span class="v">Rendered on apply</span></sc-if></div>
+<div class="kvr"><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.app}}"></path></svg></span>Applications<span class="v">GTK, terminal, editor</span></div>
+<div class="kvr"><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.grid}}"></path></svg></span>Icons<span class="v">Herda</span></div>
+<div class="kvr"><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.image}}"></path></svg></span>Wallpapers<span class="v">{{th.wp}}</span></div>
+<div class="kvr"><span class="tile"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.file}}"></path></svg></span>Published under<span class="v mono">current</span></div>
+</div>
+<p class="note"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.sun}}"></path></svg>Style can follow the day: set it to Auto for light from 07:00 to 19:00 and dark after.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="sec" id="updates" aria-labelledby="up-h">
+<div class="wrap">
+<div class="sh">
+<h2 class="h2" id="up-h">Updates when you ask for them.</h2>
+<p class="sp">Herda checks nothing until you ask. Package updates apply right away. A new release is downloaded, verified and built next to the system you are using, and takes over when you restart.</p>
+</div>
+<div class="up-grid">
+<div class="up panel">
+<div class="up-st" aria-live="polite">
+<span class="up-ico {{u.icls}}"><svg class="ic ic-l {{u.spin}}" viewBox="0 0 24 24" aria-hidden="true"><path d="{{u.icon}}"></path></svg></span>
+<div class="up-tx"><b class="up-tt">{{u.title}}</b><span class="up-ds">{{u.desc}}</span></div>
+<sc-if value="{{u.showCheck}}" hint-placeholder-val="{{true}}"><button class="btn btn-p" type="button" onClick="{{startUpdate}}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.refresh}}"></path></svg>Check for updates</button></sc-if>
+<sc-if value="{{u.showCancel}}" hint-placeholder-val="{{false}}"><button class="btn btn-g" type="button" onClick="{{resetUpdate}}">Cancel</button></sc-if>
+<sc-if value="{{u.showRestart}}" hint-placeholder-val="{{false}}"><button class="btn btn-p" type="button" onClick="{{restartUpdate}}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.power}}"></path></svg>Restart now</button></sc-if>
+<sc-if value="{{u.showReplay}}" hint-placeholder-val="{{false}}"><button class="btn btn-g" type="button" onClick="{{resetUpdate}}"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg>Replay</button></sc-if>
+</div>
+<div class="pipe">
+<div class="pipe-h"><b>A new release takes effect after a restart</b><span>Package updates don’t wait for one.</span></div>
+<div class="pipe-s">
+<sc-for list="{{pipe}}" as="p" hint-placeholder-count="4">
+<div class="ps {{p.cls}}"><div class="trk"><i style="width: {{p.w}}; transition-duration: {{p.d}};"></i></div><div class="lb"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{p.i}}"></path></svg>{{p.l}}</div></div>
+</sc-for>
+</div>
+<p class="pipe-n"><svg class="ic ic-xs" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.restore}}"></path></svg>If the new release doesn’t start correctly, Herda returns to your current system automatically.</p>
+</div>
+<div class="sysl">
+<b>This system</b>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.layers}}"></path></svg>Installed release<span class="v">Herda [Release]</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shieldCheck}}"></path></svg>Release channel<span class="v">Signed releases</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.drive}}"></path></svg>Free space<span class="v">412 GB</span></div>
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.clock}}"></path></svg>Last check<span class="v">{{lastCheck}}</span></div>
+</div>
+</div>
+
+<figure class="swp panel" role="img" aria-label="Software in Settings: installed applications, one with an update available, all managed by Smed">
+<div class="sw-top">
+<span class="sw-seg"><span class="on">Installed</span><span>Discover</span><span>Sources</span></span>
+<span class="sw-q"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{ic.search}}"></path></svg>Search installed apps</span>
+</div>
+<div class="apps">
+<sc-for list="{{apps}}" as="a" hint-placeholder-count="6">
+<div class="ap"><span class="tile" style="background: {{a.bg}}; color: {{a.fg}};"><svg class="ic ic-s" viewBox="0 0 24 24"><path d="{{a.i}}"></path></svg></span><span class="ap-t"><b>{{a.n}}</b><span>{{a.d}}</span></span><sc-if value="{{a.upd}}" hint-placeholder-val="{{false}}"><span class="upd"><svg class="ic ic-xs" viewBox="0 0 24 24"><path d="{{a.dl}}"></path></svg>Update</span></sc-if><span class="mg">Manage<svg class="ic ic-xs" viewBox="0 0 24 24"><path d="{{a.ch}}"></path></svg></span></div>
+</sc-for>
+<div class="ap-f"><span>[N] packages installed</span><span>1–6 of [N]</span></div>
+</div>
+<div class="smed"><span class="tile"><svg class="ic" viewBox="0 0 24 24"><path d="{{ic.bag}}"></path></svg></span><div><b>Managed by <em>Smed</em></b><span>pkg installs and updates every package on this system.</span></div></div>
+</figure>
+</div>
+</div>
+</section>
+
+<section class="sec" id="download" aria-labelledby="dl-h">
+<div class="wrap">
+<div class="dl">
+<div class="wp" aria-hidden="true"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="e3"></i><i class="e5"></i><i class="glow"><i class="e1g"></i></i><i class="e1"></i><i class="e2"></i><i class="e4"></i></div>
+<div class="dl-shade"></div>
+<div class="dl-l">
+<h2 class="h2" id="dl-h">Start with Herda.</h2>
+<p class="sp">Download the installer, write it to a USB drive and start your computer from it. You can also try it in a virtual machine first.</p>
+<div class="cta">
+<a class="btn btn-p btn-lg" href="#download"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.download}}"></path></svg>Download Herda</a>
+<a class="btn btn-g btn-lg" href="#docs">Installation guide</a>
+</div>
+<p class="meta">Herda [Release] · [Download size] · [Architecture]</p>
+</div>
+<div class="dl-r glass">
+<div class="dl-rh"><b>Install in three steps</b><span class="badge mu">About [Time]</span></div>
+<ol class="ist">
+<li class="is"><span class="n">1</span><div><b>Download the image</b><span>Check it against the published SHA-256 checksum and signature.</span></div></li>
+<li class="is"><span class="n">2</span><div><b>Write it to a USB drive</b><span>Use an image writer. Everything on the drive is replaced.</span></div></li>
+<li class="is"><span class="n">3</span><div><b>Start from the drive</b><span>Choose it in your computer’s boot menu, then follow the installer.</span></div></li>
+</ol>
+<div class="dl-m">
+<div class="kvr"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.shieldCheck}}"></path></svg>SHA-256<span class="v mono">[checksum]</span></div>
+<a class="kvr" href="#docs"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.file}}"></path></svg>Signature and verification<span class="v"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.chevR}}"></path></svg></span></a>
+<a class="kvr" href="#docs"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.cpu}}"></path></svg>System requirements<span class="v"><svg class="ic ic-s" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.chevR}}"></path></svg></span></a>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<footer class="ft" id="footer">
+<div class="wrap">
+<div class="ft-g">
+<div class="ft-brand">
+<a class="brand" href="#top"><span class="hmark" aria-hidden="true"></span><span>Herda</span></a>
+<p class="ft-line">An independent Linux operating system with a calm desktop and a versioned system underneath.</p>
+<a class="btn btn-p btn-sm" href="#download"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="{{ic.download}}"></path></svg>Download Herda</a>
+</div>
+<nav aria-labelledby="ft-herda"><h3 id="ft-herda">Herda</h3><ul><li><a href="#download">Download</a></li><li><a href="#">Release notes</a></li><li><a href="#">System requirements</a></li><li><a href="#">Security advisories</a></li></ul></nav>
+<nav id="docs" aria-labelledby="ft-docs"><h3 id="ft-docs">Documentation</h3><ul><li><a href="#">Getting started</a></li><li><a href="#">Installation guide</a></li><li><a href="#">Smed</a></li><li><a href="#">Malm</a></li><li><a href="#">Smia</a></li><li><a href="#">Gnist</a></li></ul></nav>
+<nav id="source" aria-labelledby="ft-src"><h3 id="ft-src">Source</h3><ul><li><a href="#">Source code</a></li><li><a href="#">Issue tracker</a></li><li><a href="#">Contributing</a></li><li><a href="#">License</a></li></ul></nav>
+<nav aria-labelledby="ft-com"><h3 id="ft-com">Community</h3><ul><li><a href="#">Forum</a></li><li><a href="#">Chat</a></li><li><a href="#">Code of conduct</a></li></ul></nav>
+</div>
+<div class="ft-b"><span>© 2026 [Project or organization name]</span><span class="ft-b-r"><span>Herda [Release]</span><a href="#top">Back to top</a></span></div>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":7500}}'>
+class Component extends DCLogic {
+  constructor(...a) {
+    super(...a);
+    this.state = { navOpen: false, profile: 'seam', active: 'seam', prev: 'seam', step: 1, tab: 'sys', vSel: 1, cSel: 1, theme: 'herda', themeCur: 'herda', up: 'idle' };
+    this.timers = [];
+    const C = (x, y, r) => 'M' + (x - r) + ' ' + y + 'a' + r + ' ' + r + ' 0 1 0 ' + (2 * r) + ' 0a' + r + ' ' + r + ' 0 1 0 ' + (-2 * r) + ' 0';
+    const R = (x, y, w, h, r) => 'M' + (x + r) + ' ' + y + 'h' + (w - 2 * r) + 'a' + r + ' ' + r + ' 0 0 1 ' + r + ' ' + r + 'v' + (h - 2 * r) + 'a' + r + ' ' + r + ' 0 0 1 ' + (-r) + ' ' + r + 'h' + (2 * r - w) + 'a' + r + ' ' + r + ' 0 0 1 ' + (-r) + ' ' + (-r) + 'v' + (2 * r - h) + 'a' + r + ' ' + r + ' 0 0 1 ' + r + ' ' + (-r) + 'z';
+    const sh = 'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z';
+    this.ic = {
+      search: C(11, 11, 7) + 'M20 20l-3.5-3.5',
+      chevR: 'M9 18l6-6-6-6',
+      check: 'M20 6L9 17l-5-5',
+      checkC: C(12, 12, 9.5) + 'M8.5 12.5l2.5 2.5 4.5-5',
+      arrowR: 'M5 12h14M13 6l6 6-6 6',
+      download: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3',
+      code: 'M16 18l6-6-6-6M8 6l-6 6 6 6',
+      menu: 'M4 7h16M4 12h16M4 17h16',
+      x: 'M18 6L6 18M6 6l12 12',
+      sun: C(12, 12, 4) + 'M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+      palette: 'M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.7 5.7 0 0 0 22 11.6C22 6.3 17.5 2 12 2zM7.5 12.5h.01M8.5 7.5h.01M13.5 6.5h.01M17.5 10.5h.01',
+      grid: R(3, 3, 7, 7, 1.5) + R(14, 3, 7, 7, 1.5) + R(3, 14, 7, 7, 1.5) + R(14, 14, 7, 7, 1.5),
+      sliders: 'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4',
+      monitor: R(2, 3, 20, 14, 2) + 'M8 21h8M12 17v4',
+      bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0',
+      timer: C(12, 13, 8) + 'M12 9v4l2 2M10 2h4',
+      volume: 'M11 5L6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14',
+      wifi: 'M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01',
+      bt: 'M7 7l10 10-5 5V2l5 5L7 17',
+      power: 'M12 2v10M18.4 6.6a9 9 0 1 1-12.8 0',
+      keyboard: R(2, 5, 20, 14, 2) + 'M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M10 13h.01M14 13h.01M18 13h.01M8 16h8',
+      drive: 'M22 12H2M5.5 5.1L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1zM6 16h.01M10 16h.01',
+      bag: 'M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0',
+      refresh: 'M21 12a9 9 0 1 1-2.64-6.36L21 8M21 3v5h-5',
+      restore: 'M3 12a9 9 0 1 0 2.64-6.36L3 8M3 3v5h5',
+      history: 'M3 12a9 9 0 1 0 2.64-6.36L3 8M3 3v5h5M12 7v5l3.5 2',
+      layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5',
+      user: C(12, 8, 4) + 'M4 21a8 8 0 0 1 16 0',
+      shield: sh,
+      shieldCheck: sh + 'M9 12l2 2 4-4',
+      info: C(12, 12, 9.5) + 'M12 16v-4.5M12 8h.01',
+      file: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6',
+      pin: 'M12 17v5M8 3h8M9 3v7l-3 4v3h12v-3l-3-4V3',
+      compare: C(6, 6, 3) + C(18, 18, 3) + 'M13 6h3a2 2 0 0 1 2 2v7M11 18H8a2 2 0 0 1-2-2V9',
+      book: 'M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2zM22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z',
+      box: 'M21 8l-9-5-9 5v8l9 5 9-5zM3 8l9 5 9-5M12 13v8',
+      clock: C(12, 12, 9.5) + 'M12 6.5V12l3.5 2',
+      cpu: R(5, 5, 14, 14, 2) + R(9, 9, 6, 6, 1) + 'M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3',
+      image: R(3, 3, 18, 18, 2.5) + C(9, 9, 2) + 'M21 15l-5-5L5 21',
+      app: R(3, 4, 18, 16, 2.5) + 'M3 9h18',
+      folder: 'M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2h7.5A2.5 2.5 0 0 1 21 9.5v7a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5z',
+      terminal: 'M4 17l6-6-6-6M12 19h8',
+      globe: C(12, 12, 9.5) + 'M2.5 12h19M12 2.5c2.6 2.6 3.9 5.8 3.9 9.5s-1.3 6.9-3.9 9.5c-2.6-2.6-3.9-5.8-3.9-9.5s1.3-6.9 3.9-9.5z',
+      music: 'M9 18V5l12-2v13' + C(6, 18, 3) + C(18, 16, 3),
+      hammer: 'M13 4.5l6.5 6.5-2.5 2.5-6.5-6.5zM13.75 10.25L4.5 19.5',
+      ore: 'M7 4l9-1 5 7-3 9-10 2-5-8zM7 4l4 7 10-1M11 11l-3 10M11 11l-8 1',
+      flame: 'M12 22c3.9 0 7-2.8 7-7 0-3.4-2.2-6.1-4-8-.2 2.4-1.4 3.9-3 4.5.4-3.1-1-6.4-4-9.5 0 4.2-5 6.8-5 13 0 4.2 4.1 7 9 7z',
+      battery: R(2, 7, 17, 10, 2) + 'M22 11v2M6 10v4',
+      slidersH: 'M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4',
+      ret: 'M20 5v6a3 3 0 0 1-3 3H5M9 10l-4 4 4 4',
+      gear: C(12, 12, 3) + C(12, 12, 7) + 'M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9L7 7M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1',
+      cat: 'M4 3.5l4 3.8a10 10 0 0 1 8 0l4-3.8V13a8 8 0 0 1-16 0zM9 12.5h.01M15 12.5h.01M11 15.5l1 .8 1-.8',
+      webTile: R(3, 3, 18, 18, 5) + C(12, 12.5, 4) + 'M12 8.5c-1.6 1.3-1.6 3.2 0 4.5',
+      aTile: R(3, 3, 18, 18, 5) + 'M8.5 16.5L12 7.5l3.5 9M10.2 13.2h3.6',
+      remote: R(3, 5, 18, 12, 3) + 'M7.5 9h.01M10.5 9h.01M13.5 9h.01M16.5 9h.01M9.5 17l2.5 2.5 2.5-2.5'
+    };
+    const F = R(1, 1, 54, 38, 6);
+    this.glyph = {
+      seam: F + R(18, 6, 20, 25, 3.5) + 'M5 6h4M44 6h7',
+      astral: F + R(6, 8, 6, 24, 3) + R(19, 13, 26, 14, 4),
+      studio: F + 'M1 8h54' + R(5, 12, 28, 23, 2.5) + R(36, 12, 11, 23, 2.5) + R(49, 12, 3, 23, 1.5),
+      desktop: F + R(14, 6, 28, 19, 3) + R(4, 30, 48, 6, 2.5) + 'M24 33h8'
+    };
+  }
+
+  componentWillUnmount() { this.clear(); }
+  clear() { this.timers.forEach((t) => clearTimeout(t)); this.timers = []; }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+
+  tint(k) {
+    const m = { amber: [255, 188, 80, '#FFBC50'], orange: [251, 167, 115, '#FBA773'], cyan: [110, 217, 228, '#6ED9E4'], mint: [123, 217, 189, '#7BD9BD'], green: [124, 213, 149, '#7CD595'], pink: [255, 177, 176, '#FFB1B0'], blue: [134, 182, 242, '#86B6F2'], violet: [196, 165, 232, '#C4A5E8'], grey: [161, 165, 167, '#C6CACC'] };
+    const c = m[k] || m.grey;
+    return { bg: 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',.15)', fg: c[3] };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const ic = this.ic;
+    const tinted = (i, c, extra) => { const t = this.tint(c); return Object.assign({ i: ic[i], bg: t.bg, fg: t.fg }, extra || {}); };
+
+    // profiles
+    const P = [
+      { id: 'seam', n: 'Seam', d: 'One adaptive launcher with quiet desktop widgets.' },
+      { id: 'astral', n: 'Astral', d: 'A floating panel with translucent surfaces.' },
+      { id: 'studio', n: 'Studio', d: 'A focused desktop with a compact edge panel.' },
+      { id: 'desktop', n: 'Desktop', d: 'A floating taskbar, purposeful workspaces and separate settings.' }
+    ];
+    const cur = P.find((p) => p.id === s.profile);
+    const act = P.find((p) => p.id === s.active);
+    const profiles = P.map((p) => ({ n: p.n, d: p.d, g: this.glyph[p.id], sel: p.id === s.profile, cls: p.id === s.profile ? 'is-sel' : '', isAct: p.id === s.active, pick: () => this.setState({ profile: p.id, step: 1 }) }));
+    const steps = [['Choose a profile', 'Selecting a card only previews it.'], ['Review changes', 'Malm prepares an exact plan.'], ['Apply', 'Only the reviewed plan is applied.']].map((x, i) => {
+      const n = i + 1;
+      const done = n < s.step || s.step === 3;
+      return { n: n, t: x[0], d: x[1], done: done, todo: !done, ck: ic.check, cls: done ? 'is-done' : (n === s.step ? 'is-now' : '') };
+    });
+    const same = s.profile === s.active;
+
+    // hero settings rows
+    const row = (i, c, l, v) => tinted(i, c, { l: l, v: v || '', ch: ic.chevR });
+    const personal = [row('sun', 'amber', 'Appearance', 'Dark · Herda'), row('palette', 'orange', 'Themes', '27 installed'), row('grid', 'violet', 'Desktop profiles', act.n), row('sliders', 'violet', 'Customize desktop'), row('monitor', 'blue', 'Workspaces'), row('bell', 'pink', 'Notifications'), row('timer', 'green', 'Focus')];
+    const devices = [row('monitor', 'blue', 'Displays', '1 display'), row('volume', 'violet', 'Sound'), row('wifi', 'blue', 'Network', 'Home 5G'), row('bt', 'blue', 'Bluetooth', 'On'), row('power', 'green', 'Power'), row('keyboard', 'grey', 'Keyboard', 'Norwegian'), row('drive', 'grey', 'Storage', '412 GB free')];
+    const system = [row('bag', 'orange', 'Software', 'Managed by Smed'), row('refresh', 'green', 'Updates'), row('layers', 'grey', 'System versions'), row('history', 'grey', 'Configuration history'), row('user', 'amber', 'Accounts', 'Administrator'), row('shield', 'cyan', 'Privacy'), row('info', 'grey', 'About', 'Herda')];
+
+    // mobile menu
+    const closeNav = () => this.setState({ navOpen: false });
+    const sheetRows = [['#desktop', 'Desktop profiles', 'grid', 'violet'], ['#system', 'System versions', 'layers', 'grey'], ['#tools', 'Tools', 'bag', 'orange'], ['#themes', 'Themes', 'palette', 'orange'], ['#updates', 'Updates', 'refresh', 'green'], ['#docs', 'Documentation', 'book', 'grey'], ['#source', 'Source', 'code', 'grey']].map((r) => tinted(r[2], r[3], { h: r[0], l: r[1], ch: ic.chevR, close: closeNav }));
+
+    // stage content
+    const seamApps = [['folder', '#FFBC50', 'Files', 'on'], ['webTile', '#FBA773', 'Firefox', ''], ['cat', '#E6E7E3', 'kitty', ''], ['box', '#FFBC50', 'Software', ''], ['app', '#C6CACC', 'Calendar', ''], ['aTile', '#FBA773', 'Alacritty', ''], ['remote', '#86B6F2', 'Avahi SSH Server', ''], ['remote', '#86B6F2', 'Avahi VNC Server', '']].map((a) => ({ i: ic[a[0]], fg: a[1], l: a[2], cls: a[3] }));
+    const seamRecent = [{ t: 'Garden · planting-plan.odt', s: 'Documents · Opened today' }, { t: 'Trip · lofoten-route.pdf', s: 'Downloads · Opened yesterday' }].map((r) => ({ t: r.t, s: r.s, fi: ic.file, ri: ic.ret }));
+    const iconRow = (keys) => keys.map((k, i) => ({ i: ic[k], cls: i === 0 ? 'on' : '' }));
+    const rail = iconRow(['grid', 'folder', 'globe', 'terminal', 'music', 'sliders']);
+    const edge = iconRow(['folder', 'search', 'code', 'terminal', 'sliders']);
+    const task = [['grid', '', false], ['folder', 'amb', false], ['file', '', false], ['globe', 'tl', false], ['terminal', '', true], ['shield', 'tl', true]].map((t) => ({ i: ic[t[0]], cls: t[1], run: t[2] }));
+
+    // versions
+    const V = [
+      { id: '00000067', c: 'Software updated', w: 'Today, 08:41', cur: true, base: '00000066' },
+      { id: '00000066', c: 'Software added', w: 'Yesterday, 17:20', base: '00000065' },
+      { id: '00000065', c: 'Software updated', w: '14 Sep', base: '00000064' },
+      { id: '00000064', c: 'Software removed', w: '9 Sep', base: '00000063' },
+      { id: '00000063', c: 'Installed system', w: '2 Sep', base: '' }
+    ];
+    const versions = V.map((v, i) => ({ id: v.id, c: v.c, w: v.w, ic: ic.layers, sel: i === s.vSel, cls: i === s.vSel ? 'is-sel' : '', badge: v.cur ? 'Current' : 'Available', bcls: v.cur ? 'ok' : (i === s.vSel ? '' : 'mu'), pick: () => this.setState({ vSel: i }) }));
+    const vs = V[s.vSel];
+    const vd = { id: vs.id, c: vs.c, base: vs.base ? 'Version ' + vs.base : 'First installation' };
+
+    // configuration history
+    const CF = [
+      { t: 'Active configuration', c: 'Desktop configuration', w: 'Today, 09:02', h: 'e41c9a0', k: 'act' },
+      { t: 'Previous configuration', c: 'Desktop configuration', w: 'Yesterday, 18:15', h: '7b2f3d1', k: '' },
+      { t: 'Earlier configuration', c: 'Restored configuration', w: '15 Sep', h: 'c08e5a4', k: '' },
+      { t: 'Saved configuration', c: 'Desktop configuration', w: '12 Sep', h: '3f9d71b', k: 'sav' },
+      { t: 'Earlier configuration', c: 'Recovery settings updated', w: '8 Sep', h: 'a55c2e8', k: '' }
+    ];
+    const cfgs = CF.map((c, i) => ({ t: c.t, c: c.c, w: c.w, h: c.h, k: c.k, pin: ic.pin, isAct: c.k === 'act', isSav: c.k === 'sav', isPlain: !c.k, sel: i === s.cSel, cls: i === s.cSel ? 'is-sel' : '', pick: () => this.setState({ cSel: i }) }));
+
+    // themes
+    const TH = [
+      { id: 'herda', n: 'Herda', m: 'Dark', bg: '#131618', s1: '#171A1D', s2: '#202327', fg: '#F2F2EF', mu: '#A1A5A7', ac: '#FFBC50', rd: '#FF8C87', gr: '#7CD595', bl: '#7CB8FF', mg: '#E29BE0', bd: 'rgba(255,255,255,.08)', sel: 'rgba(255,188,80,.14)', wp: '4' },
+      { id: 'light', n: 'Herda Light', m: 'Light', bg: '#E9EAE6', s1: '#FAFAF8', s2: '#EFF0EC', fg: '#1D2023', mu: '#5F6467', ac: '#9A6200', rd: '#B3261E', gr: '#2E7D4F', bl: '#2563A8', mg: '#8E3F8A', bd: 'rgba(0,0,0,.1)', sel: 'rgba(154,98,0,.12)', wp: '4' },
+      { id: 'aeryn', n: 'Aeryn Gold', m: 'Dark', bg: '#121410', s1: '#1B1D17', s2: '#24271F', fg: '#EDE7D6', mu: '#A6A28F', ac: '#EFC98E', rd: '#D98A6C', gr: '#98A67E', bl: '#A7B7AE', mg: '#C9A58B', bd: 'rgba(255,255,255,.08)', sel: 'rgba(239,201,142,.14)', wp: '[N]' },
+      { id: 'nord', n: 'Nord', m: 'Dark', bg: '#2E3440', s1: '#3B4252', s2: '#434C5E', fg: '#ECEFF4', mu: '#AEB7C6', ac: '#88C0D0', rd: '#BF616A', gr: '#A3BE8C', bl: '#81A1C1', mg: '#B48EAD', bd: 'rgba(255,255,255,.08)', sel: 'rgba(136,192,208,.16)', wp: '[N]' },
+      { id: 'gruvbox', n: 'Gruvbox', m: 'Dark', bg: '#1D2021', s1: '#282828', s2: '#3C3836', fg: '#EBDBB2', mu: '#A89984', ac: '#FABD2F', rd: '#FB4934', gr: '#B8BB26', bl: '#83A598', mg: '#D3869B', bd: 'rgba(255,255,255,.08)', sel: 'rgba(250,189,47,.14)', wp: '[N]' }
+    ];
+    const themes = TH.map((t) => Object.assign({}, t, { ck: ic.check, isCur: t.id === s.themeCur, sel: t.id === s.theme, cls: t.id === s.theme ? 'is-sel' : '', pick: () => this.setState({ theme: t.id }) }));
+    const th = TH.find((t) => t.id === s.theme);
+    const thIsCur = s.theme === s.themeCur;
+
+    // updates
+    const order = ['idle', 'dl', 'verify', 'build', 'ready', 'restart', 'done'];
+    const ix = order.indexOf(s.up);
+    const durs = ['1.7s', '1.1s', '1.9s', '1.2s'];
+    const pipe = [['download', 'Download'], ['shieldCheck', 'Verify'], ['layers', 'Build system'], ['power', 'Restart']].map((l, k) => {
+      const n = k + 1;
+      const phase = n === 4 ? 5 : n;
+      const full = n === 4 ? ix >= 5 : ix >= n;
+      const on = n === 4 ? (ix === 4 || ix === 5) : ix === n;
+      const done = n === 4 ? ix >= 6 : ix > n;
+      return { i: ic[l[0]], l: l[1], w: full ? '100%' : '0%', d: ix === phase ? durs[k] : '.45s', cls: done ? 'done' : (on ? 'on' : '') };
+    });
+    const U = {
+      idle: { icon: ic.refresh, icls: '', spin: '', title: 'Not checked yet', desc: 'Check for a new signed release and package updates.' },
+      dl: { icon: ic.refresh, icls: 'run', spin: 'spin', title: 'Updating', desc: 'Downloading Herda [Release]…' },
+      verify: { icon: ic.refresh, icls: 'run', spin: 'spin', title: 'Updating', desc: 'Verifying the release signature…' },
+      build: { icon: ic.refresh, icls: 'run', spin: 'spin', title: 'Updating', desc: 'Building the new system next to this one…' },
+      ready: { icon: ic.checkC, icls: 'run', spin: '', title: 'Ready to restart', desc: 'The new system is built. Nothing changes until you restart.' },
+      restart: { icon: ic.refresh, icls: 'run', spin: 'spin', title: 'Restarting', desc: 'Starting the new system…' },
+      done: { icon: ic.checkC, icls: 'ok', spin: '', title: 'Up to date', desc: 'Herda [Release] is running. The previous system is kept.' }
+    };
+    const u = Object.assign({}, U[s.up], { showCheck: ix === 0, showCancel: ix >= 1 && ix <= 3, showRestart: ix === 4, showReplay: ix === 6 });
+
+    // software list
+    const apps = [['Firefox', 'Web browser', 'orange', false], ['Thunderbird', 'Email and calendar', 'blue', true], ['GIMP', 'Image editor', 'grey', false], ['Inkscape', 'Vector graphics', 'violet', false], ['Blender', '3D creation', 'amber', false], ['LibreOffice', 'Office suite', 'green', false]].map((a) => tinted('grid', a[2], { n: a[0], d: a[1], upd: a[3], dl: ic.download, ch: ic.chevR }));
+
+    return {
+      ic: ic,
+      navOpen: s.navOpen,
+      navLabel: s.navOpen ? 'Close menu' : 'Open menu',
+      navIcon: s.navOpen ? ic.x : ic.menu,
+      toggleNav: () => this.setState({ navOpen: !s.navOpen }),
+      closeNav: closeNav,
+      sheetRows: sheetRows,
+      personal: personal, devices: devices, system: system,
+      profiles: profiles, steps: steps, cur: cur, act: act,
+      isSeam: s.profile === 'seam', isAstral: s.profile === 'astral', isStudio: s.profile === 'studio', isDesktop: s.profile === 'desktop',
+      stageLabel: 'Preview of the ' + cur.n + ' desktop profile',
+      seamApps: seamApps, seamRecent: seamRecent, rail: rail, edge: edge, task: task,
+      sumCurrent: s.step === 1 && same,
+      sumPreview: s.step === 1 && !same,
+      sumPlan: s.step === 2,
+      sumDone: s.step === 3,
+      review: () => this.setState({ step: 2 }),
+      back: () => this.setState({ step: 1 }),
+      apply: () => this.setState((st) => ({ prev: st.active, active: st.profile, step: 3 })),
+      undo: () => this.setState((st) => ({ active: st.prev, profile: st.prev, step: 1 })),
+      tabSys: s.tab === 'sys', tabCfg: s.tab === 'cfg',
+      tabSysCls: s.tab === 'sys' ? 'on' : '', tabCfgCls: s.tab === 'cfg' ? 'on' : '',
+      tabNote: s.tab === 'sys' ? 'Software versions, kept by Smed.' : 'Desktop settings, kept by Malm.',
+      showSys: () => this.setState({ tab: 'sys' }),
+      showCfg: () => this.setState({ tab: 'cfg' }),
+      versions: versions, vd: vd, vIsCur: !!vs.cur, vNotCur: !vs.cur,
+      cfgs: cfgs, cd: CF[s.cSel], cIsAct: s.cSel === 0, cNotAct: s.cSel !== 0,
+      themes: themes, th: th, thIsCur: thIsCur, thNotCur: !thIsCur,
+      thLabel: 'Files, terminal and editor in the ' + th.n + ' theme',
+      applyTheme: () => this.setState({ themeCur: s.theme }),
+      u: u, pipe: pipe, lastCheck: ix === 0 ? 'Never' : 'Just now',
+      startUpdate: () => {
+        this.clear();
+        this.setState({ up: 'dl' });
+        this.later(() => this.setState({ up: 'verify' }), 1800);
+        this.later(() => this.setState({ up: 'build' }), 3000);
+        this.later(() => this.setState({ up: 'ready' }), 5000);
+      },
+      restartUpdate: () => {
+        this.clear();
+        this.setState({ up: 'restart' });
+        this.later(() => this.setState({ up: 'done' }), 1400);
+      },
+      resetUpdate: () => { this.clear(); this.setState({ up: 'idle' }); },
+      apps: apps
+    };
+  }
+}
+</script>
+</body>
+</html>
