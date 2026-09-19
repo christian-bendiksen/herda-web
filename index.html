@@ -60,7 +60,7 @@ sc-for,sc-if{display:contents}
 .mark{width:22px;height:22px;fill:none;stroke:var(--acc);stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}
 .hmark{display:block;flex:none;width:18px;height:24px;background:var(--acc);-webkit-mask:url(./assets/8a2498ed82662cd6b050a83649735d0c.png) center/contain no-repeat;mask:url(./assets/8a2498ed82662cd6b050a83649735d0c.png) center/contain no-repeat}
 .smk .hmark{width:15px;height:20px}
-.st-b .hmark{width:10px;height:14px}
+.sd-bar .hmark{width:10px;height:14px}
 .links{display:flex;gap:2px}
 .links a{display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:999px;font-size:14.5px;color:var(--t3);transition:color .2s,background-color .2s}
 .links a:hover{color:var(--fg);background:rgba(255,255,255,.05)}
@@ -270,8 +270,8 @@ sc-for,sc-if{display:contents}
 .as-m span{font-size:12px;color:var(--t3)}
 .as-top{position:absolute;top:14px;right:18px}
 .st-bg{position:absolute;inset:0;background:#15181A}
-.st-b{position:absolute;left:0;right:0;top:0;height:32px;display:flex;align-items:center;gap:14px;padding:0 14px;background:#1A1D20;box-shadow:inset 0 -1px 0 var(--hl);font-size:12px;color:var(--t3)}
-.st-b .push{margin-left:auto}
+.sd-bar{position:absolute;left:0;right:0;top:0;height:32px;display:flex;align-items:center;gap:14px;padding:0 14px;background:#1A1D20;box-shadow:inset 0 -1px 0 var(--hl);font-size:12px;color:var(--t3)}
+.sd-bar .push{margin-left:auto}
 .st-w{position:absolute;top:46px;bottom:14px;display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:12px;background:#1C1F22;box-shadow:inset 0 0 0 1px var(--hl)}
 .st-w1{left:14px;width:452px}
 .st-w2{left:478px;width:230px}
@@ -369,7 +369,7 @@ sc-for,sc-if{display:contents}
 .fact+.fact{box-shadow:0 -1px 0 var(--hl)}
 .fact .tile{width:36px;height:36px;border-radius:10px;background:var(--s2);color:var(--t2)}
 .fact b{display:block;font-size:15px;font-weight:600}
-.fact span{display:block;margin-top:2px;font-size:13.5px;line-height:1.45;color:var(--t4)}
+.fact div span{display:block;margin-top:2px;font-size:13.5px;line-height:1.45;color:var(--t4)}
 .seg-w{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .seg{display:inline-flex;gap:2px;padding:4px;border-radius:14px;background:var(--s1);box-shadow:inset 0 0 0 1px var(--hl)}
 .seg button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;font-size:14px;font-weight:500;color:var(--t3);transition:background-color .2s,color .2s}
@@ -541,7 +541,7 @@ sc-for,sc-if{display:contents}
 .smed .tile{width:38px;height:38px;border-radius:11px;background:rgba(251,167,115,.14);color:#FBA773}
 .smed b{display:block;font-size:14px;font-weight:600}
 .smed b em{font-style:normal;color:#FBA773}
-.smed span{display:block;font-size:13px;color:var(--t4)}
+.smed div span{display:block;font-size:13px;color:var(--t4)}
 
 /* download */
 .dl{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:center;padding:72px 64px;overflow:hidden;border-radius:32px;isolation:isolate;box-shadow:inset 0 0 0 1px var(--hl2)}
@@ -641,8 +641,8 @@ sc-for,sc-if{display:contents}
 .ap-t b,.ap-t span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .ap .mg{gap:0;font-size:0}
 .seg button{white-space:nowrap}
-.st-b{height:15px;font-size:0}
-.st-b svg,.st-b .ws,.st-b .hmark{display:none}
+.sd-bar{height:15px;font-size:0}
+.sd-bar svg,.sd-bar .ws,.sd-bar .hmark{display:none}
 .steps{flex-direction:column;gap:0}
 .step{padding-bottom:16px}
 .step:not(:last-child)::before{display:block}
@@ -676,6 +676,8 @@ sc-for,sc-if{display:contents}
 .ft-g{grid-template-columns:1fr 1fr;gap:28px}
 .ft-b{flex-direction:column}
 }
+/* icon and number holders: flex centring, consistent across browsers (Firefox misplaced SVGs under grid centring) */
+.tile,.kbd,.st-n,.as-r .b,.st-e .b,.tb-a,.tool-e,.tv-s .n,.thc-ck,.up-ico,.is .n{display:flex;align-items:center;justify-content:center}
 @media (prefers-reduced-motion:reduce){
 html,.phone{scroll-behavior:auto}
 .hw *,.hw *::before,.hw *::after{animation:none!important;transition:none!important}
@@ -850,7 +852,7 @@ html,.phone{scroll-behavior:auto}
 
 <sc-if value="{{isStudio}}" hint-placeholder-val="{{false}}">
 <div class="lay"><div class="st-bg"></div>
-<div class="st-b"><span class="hmark"></span><span class="ws"><i class="on"></i><i></i><i></i></span><span class="push">Thu 17 Sep 09:06</span></div>
+<div class="sd-bar"><span class="hmark"></span><span class="ws"><i class="on"></i><i></i><i></i></span><span class="push">Thu 17 Sep 09:06</span></div>
 <div class="lay-k">
 <div class="st-w st-w1"><i class="sk hi" style="width: 38%;"></i><i class="sk" style="width: 86%; margin-top: 10px;"></i><i class="sk" style="width: 78%;"></i><i class="sk" style="width: 82%;"></i><i class="sk" style="width: 54%;"></i><i class="sk" style="width: 70%; margin-top: 14px;"></i><i class="sk" style="width: 64%;"></i><i class="sk" style="width: 40%;"></i></div>
 <div class="st-w st-w2"><i class="sk gr" style="width: 46%;"></i><i class="sk" style="width: 80%; margin-top: 10px;"></i><i class="sk" style="width: 66%;"></i><i class="sk" style="width: 74%;"></i></div>
