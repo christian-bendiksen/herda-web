@@ -199,7 +199,7 @@ sc-for,sc-if{display:contents}
 .stage{position:relative;height:480px;overflow:hidden;border-radius:24px;isolation:isolate;box-shadow:inset 0 0 0 1px var(--hl2),0 40px 80px -40px rgba(0,0,0,.8)}
 .lay{position:absolute;inset:0;animation:lay .6s var(--ease) both}
 @keyframes lay{from{opacity:0;transform:scale(1.015)}}
-.lay-k{position:absolute;left:50%;top:50%;width:784px;height:480px;transform:translate(-50%,-50%)}
+.lay-k{position:absolute;left:50%;top:50%;width:784px;height:480px;transform:translate(-50%,-50%) scale(var(--k,1))}
 .sbar{position:absolute;top:14px;left:18px;right:18px;display:flex;align-items:center;justify-content:space-between}
 .smk{display:flex;align-items:center;gap:10px}
 .smk svg{width:15px;height:15px;fill:none;stroke:var(--acc);stroke-width:3;stroke-linecap:round}
@@ -595,7 +595,8 @@ sc-for,sc-if{display:contents}
 .pf-grid{display:flex;flex-direction:column;gap:16px}
 .pf-side,.pf-main{display:contents}
 .pf-list{order:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
-.stage{order:2}
+.stage{order:2;height:0;padding-top:61.2245%}
+.hero>.wp{height:100%}
 .sum{order:3}
 .steps{order:4;flex-direction:row;gap:16px;margin-top:8px}
 .step{flex:1;padding-bottom:0}
@@ -613,8 +614,7 @@ sc-for,sc-if{display:contents}
 .ft-brand{grid-column:1/-1}
 }
 @container hw (max-width:860px){
-.stage{height:410px}
-.lay-k{transform:translate(-50%,-50%) scale(.85)}
+.stage{--k:.72}
 .cols3{grid-template-columns:repeat(2,minmax(0,1fr))}
 .cols3 .col:last-child{display:none}
 }
@@ -634,8 +634,12 @@ sc-for,sc-if{display:contents}
 .sp{font-size:16.5px}
 .pf-list{grid-template-columns:1fr}
 .pf{padding:12px 14px}
-.stage{height:auto;aspect-ratio:784/480;border-radius:18px}
-.lay-k{transform:translate(-50%,-50%) scale(.445)}
+.stage{border-radius:18px;--k:.41}
+.sum{flex-wrap:nowrap}
+.sum-a{flex:none}
+.ap-t b,.ap-t span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ap .mg{gap:0;font-size:0}
+.seg button{white-space:nowrap}
 .st-b{height:15px;font-size:0}
 .st-b svg,.st-b .ws,.st-b .hmark{display:none}
 .steps{flex-direction:column;gap:0}
@@ -798,7 +802,7 @@ html,.phone{scroll-behavior:auto}
 </div>
 
 <div class="pf-main">
-<div class="stage" role="img" aria-label="{{stageLabel}}">
+<div class="stage" ref="{{setStage}}" role="img" aria-label="{{stageLabel}}">
 <div class="wb"><i class="b1"></i><i class="b2"></i><i class="glow"><i class="l1g"></i></i><i class="l1"></i><i class="l2"></i></div>
 
 <sc-if value="{{isSeam}}" hint-placeholder-val="{{true}}">
@@ -1332,7 +1336,22 @@ class Component extends DCLogic {
     };
   }
 
-  componentWillUnmount() { this.clear(); }
+  componentWillUnmount() { this.clear(); if (this.ro) { this.ro.disconnect(); this.ro = null; } }
+
+  fitStage(el) {
+    if (this.ro) { this.ro.disconnect(); this.ro = null; }
+    if (!el) return;
+    const fit = () => {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      if (w && h) el.style.setProperty('--k', String(Math.min(w / 784, h / 480, 1.25)));
+    };
+    fit();
+    if (typeof ResizeObserver !== 'undefined') {
+      this.ro = new ResizeObserver(fit);
+      this.ro.observe(el);
+    }
+  }
   clear() { this.timers.forEach((t) => clearTimeout(t)); this.timers = []; }
   later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
 
@@ -1454,6 +1473,7 @@ class Component extends DCLogic {
       profiles: profiles, steps: steps, cur: cur, act: act,
       isSeam: s.profile === 'seam', isAstral: s.profile === 'astral', isStudio: s.profile === 'studio', isDesktop: s.profile === 'desktop',
       stageLabel: 'Preview of the ' + cur.n + ' desktop profile',
+      setStage: this.setStage || (this.setStage = (el) => this.fitStage(el)),
       seamApps: seamApps, seamRecent: seamRecent, rail: rail, edge: edge, task: task,
       sumCurrent: s.step === 1 && same,
       sumPreview: s.step === 1 && !same,
