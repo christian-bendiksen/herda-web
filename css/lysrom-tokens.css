@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Herda / Lysrom V3.17 Design Tokens (with Brief 06 / V3.18 Live Refinements)
+   - Solid matte surfaces everywhere (zero glass, zero blur, zero chromatic glow)
+   - Three modes: Night (default), Day, High Contrast (data-mode="night"|"day"|"hc")
+   - Eight official Herda Rooms (data-room="1".."8", never red)
+   - Full Lysrom geometry, typography, Four Tones, and motion scales
+   ========================================================================== */
+
+@property --accent-r {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 77;
+}
+
+@property --accent-g {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 163;
+}
+
+@property --accent-b {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 255;
+}
+
+:root {
+  color-scheme: dark;
+
+  /* ---- Typography (Local only: Inter + JetBrains Mono) ---- */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Exact Lysrom Radii Scale ---- */
+  --r-seg: 4px;
+  --r-key: 5px;
+  --r-ctrl: 6px;
+  --r-row: 8px;
+  --r-tip: 9px;
+  --r-card: 10px;
+  --r-win: 12px;
+  --r-popout: 16px;
+  --r-cap-btn: 18px;
+  --r-pill: 22px;
+
+  /* ---- Lysrom Motion Scale ---- */
+  --dur-press: 80ms;
+  --dur-swap: 120ms;
+  --dur-release: 160ms;
+  --dur-leave: 200ms;
+  --dur-popover-out: 100ms;
+  --dur-popover-in: 240ms;
+  --dur-arrive: 300ms;
+  --dur-glide: 400ms;
+  --dur-lamp: 1000ms;
+  --dur-breath: 2400ms;
+
+  --ease-settle: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-arrive: cubic-bezier(0.2, 1.35, 0.35, 1);
+  --ease-leave: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --ease-room: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-linear: linear;
+
+  /* ---- Night Palette (Live Table A) ---- */
+  --wall: #0A0D14;
+  --well: #0F131B;
+  --side: #12161F;
+  --window-behind: #141922;
+  --window: #181D28;
+  --panel: #181D28;
+  --fill1: #20273A;
+  --control: #242B3C;
+  --fill2: #283044;
+  --chosen: #283044;
+  --control-raised: #2C3549;
+  --fill3: #313B52;
+  --segment-on: #313B52;
+  --segment-on-group: #38435C;
+  --switch-off: #6A758B;
+
+  /* Lines */
+  --hair: #2A3242;
+  --edge: #333C4F;
+  --edge-front: #3E485D;
+  --control-edge: #465269;
+
+  /* Inks */
+  --ink: #E8ECF4;
+  --ink2: #A9B2C3;
+  --ink3: #8E99AD;
+  --ink4: rgba(232, 236, 244, 0.30);
+  --link: #7DBBFF;
+  --tip: #E8ECF4;
+  --tip-ink: #181D28;
+  --knob: #FFFFFF;
+  --scrim: rgba(7, 9, 16, 0.50);
+  --selection-bg: #1E3A5F;
+
+  /* Semantic / Four Tones */
+  --ok: #5FD3A0;
+  --changed: #E8B45A;
+  --danger: #E02B4D;
+  --danger-ink: #FF6F88;
+  --on-danger: #FFFFFF;
+  --diff-added: #5FD3A0;
+  --diff-removed: #FF8A7A;
+  --hand: #A794C9;
+  --on-hand: #FFFFFF;
+
+  /* Brand informational tokens */
+  --brand-herda: #FFBC50;
+  --brand-smed: #FBA773;
+  --brand-malm: #7FCFE0;
+  --brand-smia: #7BD9BD;
+
+  /* Neutral Studio Elevation Shadows (zero chromatic underglow) */
+  --shadow: 0 8px 22px rgba(0, 0, 0, 0.36);
+  --front-shadow: 0 16px 38px rgba(0, 0, 0, 0.48);
+  --popover-shadow: 0 8px 20px rgba(0, 0, 0, 0.38);
+  --bar-shadow: 0 1px 3px rgba(0, 0, 0, 0.38), 0 8px 22px rgba(0, 0, 0, 0.36);
+  --knob-shadow: 0 1px 4px rgba(0, 0, 20, 0.35);
+  --slider-knob-shadow: 0 3px 10px rgba(0, 0, 10, 0.30), 0 0 0 1px rgba(0, 0, 10, 0.08);
+  --hc-ctrl-ring: none;
+
+  /* Threshold Lamp Alpha Stops (Night) */
+  --lamp-top-a1: 0.18;
+  --lamp-top-a2: 0.06;
+  --lamp-bot-a1: 0.10;
+
+  /* All 8 Official Herda Rooms (Night) */
+  --r1: #4DA3FF; --r1-on: #051626;
+  --r2: #3FD69A; --r2-on: #04241A;
+  --r3: #8F7BFF; --r3-on: #0D0730;
+  --r4: #FF774D; --r4-on: #2A0C05;
+  --r5: #FFC24D; --r5-on: #261B05;
+  --r6: #C9E04A; --r6-on: #181C04;
+  --r7: #3FD0E0; --r7-on: #052326;
+  --r8: #FF7ACC; --r8-on: #260518;
+
+  /* Active Room defaults (Room 1: Home) */
+  --accent: #4DA3FF;
+  --on-accent: #051626;
+  --accent-hover: #63AEFF;
+  --role-ink: #7DBBFF;
+  --accent-r: 77;
+  --accent-g: 163;
+  --accent-b: 255;
+
+  /* Syntax Highlighting Palette (Night, >= 4.5:1 on --well #0F131B) */
+  --syn-kw: #A794FF;
+  --syn-type: #3FD0E0;
+  --syn-fn: #7DBBFF;
+  --syn-str: #5FD3A0;
+  --syn-num: #FFC24D;
+  --syn-bool: #FF9473;
+  --syn-comment: #8E99AD;
+  --syn-attr: #E8B45A;
+  --syn-op: #A9B2C3;
+  --syn-ns: #FF8AD2;
+  --syn-interp: #E8ECF4;
+  --syn-key: #7FCFE0;
+  --syn-path: #7BD9BD;
+  --syn-err: #FF6F88;
+}
+
+/* ==========================================================================
+   Night / High Contrast Room Accents (data-room="1".."8")
+   ========================================================================== */
+
+:root[data-room="1"] {
+  --accent: #4DA3FF;
+  --on-accent: #051626;
+  --accent-hover: #63AEFF;
+  --role-ink: #7DBBFF;
+  --accent-r: 77; --accent-g: 163; --accent-b: 255;
+}
+
+:root[data-room="2"] {
+  --accent: #3FD69A;
+  --on-accent: #04241A;
+  --accent-hover: #56DBA6;
+  --role-ink: #5FDCA9;
+  --accent-r: 63; --accent-g: 214; --accent-b: 154;
+}
+
+:root[data-room="3"] {
+  --accent: #8F7BFF;
+  --on-accent: #0D0730;
+  --accent-hover: #9D8BFF;
+  --role-ink: #AFA0FF;
+  --accent-r: 143; --accent-g: 123; --accent-b: 255;
+}
+
+:root[data-room="4"] {
+  --accent: #FF774D;
+  --on-accent: #2A0C05;
+  --accent-hover: #FF8762;
+  --role-ink: #FF9473;
+  --accent-r: 255; --accent-g: 119; --accent-b: 77;
+}
+
+:root[data-room="5"] {
+  --accent: #FFC24D;
+  --on-accent: #261B05;
+  --accent-hover: #FFC962;
+  --role-ink: #FFC24D;
+  --accent-r: 255; --accent-g: 194; --accent-b: 77;
+}
+
+:root[data-room="6"] {
+  --accent: #C9E04A;
+  --on-accent: #181C04;
+  --accent-hover: #CFE460;
+  --role-ink: #C9E04A;
+  --accent-r: 201; --accent-g: 224; --accent-b: 74;
+}
+
+:root[data-room="7"] {
+  --accent: #3FD0E0;
+  --on-accent: #052326;
+  --accent-hover: #56D6E4;
+  --role-ink: #5ED8E6;
+  --accent-r: 63; --accent-g: 208; --accent-b: 224;
+}
+
+:root[data-room="8"] {
+  --accent: #FF7ACC;
+  --on-accent: #260518;
+  --accent-hover: #FF8AD2;
+  --role-ink: #FF94D6;
+  --accent-r: 255; --accent-g: 122; --accent-b: 204;
+}
+
+/* ==========================================================================
+   Day Mode (Live Palette)
+   ========================================================================== */
+
+:root[data-mode="day"] {
+  color-scheme: light;
+
+  --wall: #E6EAF1;
+  --well: #EEF1F6;
+  --side: #EEF1F6;
+  --window-behind: #F1F4F8;
+  --window: #FFFFFF;
+  --panel: #FFFFFF;
+  --fill1: #F3F6FA;
+  --control: #F3F6FA;
+  --fill2: #E3E8F0;
+  --chosen: #E3E8F0;
+  --control-raised: #E6EBF2;
+  --fill3: #D8DFEA;
+  --segment-on: #FFFFFF;
+  --segment-on-group: #FFFFFF;
+  --switch-off: #808CA0;
+
+  --hair: #DDE3EC;
+  --edge: #CDD5E0;
+  --edge-front: #B9C3D2;
+  --control-edge: #AEB8C8;
+
+  --ink: #141A24;
+  --ink2: #4A5568;
+  --ink3: #5B697F;
+  --ink4: rgba(20, 26, 36, 0.30);
+  --link: #1F6CD0;
+  --tip: #141A24;
+  --tip-ink: #FFFFFF;
+  --knob: #FFFFFF;
+  --scrim: rgba(20, 30, 50, 0.22);
+  --selection-bg: #E3EEFC;
+
+  --ok: #277C5B;
+  --changed: #936518;
+  --danger: #CF1F45;
+  --danger-ink: #CF1F45;
+  --on-danger: #FFFFFF;
+  --diff-added: #1E8E5A;
+  --diff-removed: #D93D30;
+  --hand: #6A558F;
+  --on-hand: #FFFFFF;
+
+  --brand-herda: #785000;
+  --brand-smed: #A34E00;
+  --brand-malm: #005D6C;
+  --brand-smia: #006852;
+
+  --shadow: 0 6px 16px rgba(20, 30, 50, 0.12);
+  --front-shadow: 0 12px 28px rgba(20, 30, 50, 0.18);
+  --popover-shadow: 0 6px 16px rgba(20, 30, 50, 0.14);
+  --bar-shadow: 0 1px 2px rgba(17, 18, 21, 0.07), 0 6px 16px rgba(20, 30, 50, 0.12);
+
+  /* Threshold Lamp Alpha Stops (Day = Night x 0.6) */
+  --lamp-top-a1: 0.108;
+  --lamp-top-a2: 0.036;
+  --lamp-bot-a1: 0.06;
+
+  /* All 8 Official Herda Rooms (Day, OKLCH chroma <= 0.16) */
+  --r1: #3B90EC;
+  --r2: #22A16F;
+  --r3: #8C7DEB;
+  --r4: #E36A47;
+  --r5: #C38000;
+  --r6: #83961A;
+  --r7: #1B9CAA;
+  --r8: #D468B1;
+
+  /* Syntax Highlighting Palette (Day, >= 4.5:1 on --well #EEF1F6) */
+  --syn-kw: #5B43C8;
+  --syn-type: #0E6E7A;
+  --syn-fn: #1A5FB4;
+  --syn-str: #1C704E;
+  --syn-num: #945B00;
+  --syn-bool: #B53E1E;
+  --syn-comment: #5B697F;
+  --syn-attr: #875709;
+  --syn-op: #4A5568;
+  --syn-ns: #9F2E79;
+  --syn-interp: #141A24;
+  --syn-key: #005D6C;
+  --syn-path: #006852;
+  --syn-err: #CF1F45;
+}
+
+:root[data-mode="day"][data-room="1"] {
+  --accent: #3B90EC;
+  --on-accent: #051626;
+  --accent-hover: #5A9EE8;
+  --role-ink: #1C62B5;
+  --accent-r: 59; --accent-g: 144; --accent-b: 236;
+}
+
+:root[data-mode="day"][data-room="2"] {
+  --accent: #22A16F;
+  --on-accent: #04241A;
+  --accent-hover: #3DAC80;
+  --role-ink: #167550;
+  --accent-r: 34; --accent-g: 161; --accent-b: 111;
+}
+
+:root[data-mode="day"][data-room="3"] {
+  --accent: #8C7DEB;
+  --on-accent: #0D0730;
+  --accent-hover: #9A8DED;
+  --role-ink: #5848B8;
+  --accent-r: 140; --accent-g: 125; --accent-b: 235;
+}
+
+:root[data-mode="day"][data-room="4"] {
+  --accent: #E36A47;
+  --on-accent: #2A0C05;
+  --accent-hover: #E67C5D;
+  --role-ink: #B34222;
+  --accent-r: 227; --accent-g: 106; --accent-b: 71;
+}
+
+:root[data-mode="day"][data-room="5"] {
+  --accent: #C38000;
+  --on-accent: #261B05;
+  --accent-hover: #CA8F1F;
+  --role-ink: #8A5800;
+  --accent-r: 195; --accent-g: 128; --accent-b: 0;
+}
+
+:root[data-mode="day"][data-room="6"] {
+  --accent: #83961A;
+  --on-accent: #181C04;
+  --accent-hover: #92A335;
+  --role-ink: #5C6B0D;
+  --accent-r: 131; --accent-g: 150; --accent-b: 26;
+}
+
+:root[data-mode="day"][data-room="7"] {
+  --accent: #1B9CAA;
+  --on-accent: #052326;
+  --accent-hover: #36A8B4;
+  --role-ink: #12717C;
+  --accent-r: 27; --accent-g: 156; --accent-b: 170;
+}
+
+:root[data-mode="day"][data-room="8"] {
+  --accent: #D468B1;
+  --on-accent: #260518;
+  --accent-hover: #D97ABA;
+  --role-ink: #A1387E;
+  --accent-r: 212; --accent-g: 104; --accent-b: 177;
+}
+
+/* ==========================================================================
+   High Contrast Mode (All lamps/washes disabled; >= 3:1 promoted lines)
+   ========================================================================== */
+
+:root[data-mode="hc"] {
+  color-scheme: dark;
+
+  --wall: #05070B;
+  --well: #0B0E15;
+  --side: #0E121B;
+  --window-behind: #111621;
+  --window: #131823;
+  --panel: #131823;
+  --fill1: #1C2333;
+  --control: #21293B;
+  --fill2: #283247;
+  --chosen: #283247;
+  --control-raised: #2D3850;
+  --fill3: #364360;
+  --segment-on: #364360;
+  --segment-on-group: #3D4B6B;
+  --switch-off: #8A96AE;
+
+  /* Promoted >= 3:1 line tokens (06-visibility + D12 recipe) */
+  --hair: #566584;
+  --edge: #7E8AA2;
+  --edge-front: #8D99B0;
+  --control-edge: #8D99B0;
+
+  /* High-legibility inks (90% mix for secondary/tertiary) */
+  --ink: #FFFFFF;
+  --ink2: #E3E8F2;
+  --ink3: #CDD5E4;
+  --ink4: rgba(255, 255, 255, 0.55);
+  --link: #99CAFF;
+  --scrim: rgba(0, 0, 0, 0.72);
+
+  /* Lamps completely disabled */
+  --lamp-top-a1: 0;
+  --lamp-top-a2: 0;
+  --lamp-bot-a1: 0;
+
+  --hc-ctrl-ring: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+
+  --syn-comment: #C4CEDF;
+  --syn-op: #DDE4F0;
+}
+
+/* ==========================================================================
+   Reduced Motion Override
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-press: 0ms;
+    --dur-swap: 120ms;
+    --dur-release: 100ms;
+    --dur-leave: 100ms;
+    --dur-popover-out: 100ms;
+    --dur-popover-in: 150ms;
+    --dur-arrive: 150ms;
+    --dur-glide: 150ms;
+    --dur-lamp: 150ms;
+    --dur-breath: 0ms;
+    --ease-settle: linear;
+    --ease-arrive: linear;
+    --ease-leave: linear;
+    --ease-room: linear;
+  }
+}
